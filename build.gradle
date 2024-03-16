@@ -12,6 +12,11 @@ repositories {
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.2.3'// Use the latest version of Spring Boot
+    implementation 'org.seleniumhq.selenium:selenium-java:4.18.1'
+    implementation 'org.seleniumhq.selenium:selenium-edge-driver:4.1.1'
+//    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.2.3'
+
 }
 
 test {

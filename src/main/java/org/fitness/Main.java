@@ -1,4 +1,4 @@
-package org.mainApplication;
+package org.fitness;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.SpringApplication;
