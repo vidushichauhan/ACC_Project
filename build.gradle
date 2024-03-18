@@ -15,6 +15,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:3.2.3'// Use the latest version of Spring Boot
     implementation 'org.seleniumhq.selenium:selenium-java:4.18.1'
     implementation 'org.seleniumhq.selenium:selenium-edge-driver:4.1.1'
+    implementation 'org.jsoup:jsoup:1.15.4'
 //    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.2.3'
 
 }

@@ -13,4 +13,8 @@ public interface FitnessService {
     public Map<String, String> historySearchList();
     public List<String> manualSearchList(String location);
 
+    public void webScrapper(String location);
+
+
+    public void parseWebsite();
 }

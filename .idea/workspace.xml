@@ -5,19 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dbb44a92-9123-406d-883e-c4c801067d63" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/SpellChecker.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Files/Cities.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/Files/Cities1.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/HtmlParser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/WebCrawler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Files/GymContentUrls.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/WebDriver/msedgedriver" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/WebDriver/msedgedriver.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/controller/FitnessController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/controller/FitnessController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/services/FitnessService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/services/FitnessService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/WordCompletion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/WordCompletion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/Files/CitySearchHistory.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Files/CitySearchHistory.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -77,9 +77,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2de1UAZ9daOtIRuJL4SUlGz0e3G" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -104,7 +104,7 @@
     "Spring Boot.Main.executor": "Debug",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/java/org/fitness/utilities",
+    "last_opened_file_path": "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -120,8 +120,10 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/main/java/org/fitness/utilities" />
       <recent name="$PROJECT_DIR$/src/main/resources/Files" />
+      <recent name="$PROJECT_DIR$/src/main/resources" />
+      <recent name="$PROJECT_DIR$/src/main/java/org/fitness/utilities" />
+      <recent name="$PROJECT_DIR$/src/main/resources/WebDriver" />
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.Main">
@@ -243,7 +245,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1710353743094</updated>
-      <workItem from="1710353744119" duration="22066000" />
+      <workItem from="1710353744119" duration="27977000" />
+      <workItem from="1710723328104" duration="9804000" />
     </task>
     <servers />
   </component>
@@ -273,6 +276,251 @@
           <line>85</line>
           <option name="timeStamp" value="31" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>287</line>
+          <option name="timeStamp" value="153" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>285</line>
+          <option name="timeStamp" value="154" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>284</line>
+          <option name="timeStamp" value="155" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>289</line>
+          <option name="timeStamp" value="162" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>291</line>
+          <option name="timeStamp" value="163" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>294</line>
+          <option name="timeStamp" value="164" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>296</line>
+          <option name="timeStamp" value="165" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>300</line>
+          <option name="timeStamp" value="166" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>305</line>
+          <option name="timeStamp" value="167" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>329</line>
+          <option name="timeStamp" value="172" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>219</line>
+          <option name="timeStamp" value="191" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>221</line>
+          <option name="timeStamp" value="192" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>233</line>
+          <option name="timeStamp" value="193" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>237</line>
+          <option name="timeStamp" value="194" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>241</line>
+          <option name="timeStamp" value="195" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>245</line>
+          <option name="timeStamp" value="196" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>249</line>
+          <option name="timeStamp" value="197" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>252</line>
+          <option name="timeStamp" value="198" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>258</line>
+          <option name="timeStamp" value="199" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>265</line>
+          <option name="timeStamp" value="200" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>272</line>
+          <option name="timeStamp" value="201" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>52</line>
+          <option name="timeStamp" value="203" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>55</line>
+          <option name="timeStamp" value="205" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>57</line>
+          <option name="timeStamp" value="206" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>60</line>
+          <option name="timeStamp" value="207" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>93</line>
+          <option name="timeStamp" value="208" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>97</line>
+          <option name="timeStamp" value="209" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>100</line>
+          <option name="timeStamp" value="210" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>102</line>
+          <option name="timeStamp" value="211" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>87</line>
+          <option name="timeStamp" value="212" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>86</line>
+          <option name="timeStamp" value="213" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>67</line>
+          <option name="timeStamp" value="214" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>70</line>
+          <option name="timeStamp" value="215" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>130</line>
+          <option name="timeStamp" value="216" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>132</line>
+          <option name="timeStamp" value="217" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>136</line>
+          <option name="timeStamp" value="218" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>134</line>
+          <option name="timeStamp" value="219" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>143</line>
+          <option name="timeStamp" value="220" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>145</line>
+          <option name="timeStamp" value="221" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>140</line>
+          <option name="timeStamp" value="222" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>139</line>
+          <option name="timeStamp" value="223" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>137</line>
+          <option name="timeStamp" value="224" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>162</line>
+          <option name="timeStamp" value="225" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>164</line>
+          <option name="timeStamp" value="226" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>224</line>
+          <option name="timeStamp" value="230" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+          <line>282</line>
+          <option name="timeStamp" value="231" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
+          <line>96</line>
+          <option name="timeStamp" value="232" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
+          <line>100</line>
+          <option name="timeStamp" value="233" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
+          <line>97</line>
+          <option name="timeStamp" value="234" />
+        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/SpellChecker.java</url>
           <line>91</line>
@@ -284,5 +532,11 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="org.openqa.selenium.edge.EdgeDriver" memberName="elementLocation" />
+        <PinnedItemInfo parentTag="java.lang.String" memberName="coder" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>

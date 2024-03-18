@@ -1,15 +1,16 @@
 package org.fitness.utilities;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Utilities {
 
-    public static Hashtable<String, Integer> citySrhCount;
+
     public static final String citySearchFile = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/CitySearchHistory.txt";
+    private static final String URL_REGEX = "(\\b(https?|ftp|file)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]";
 
     public Hashtable<String, Integer> fileToHashmap(String filePath) {
         Hashtable<String, Integer> srhCount = new Hashtable<>();
@@ -31,10 +32,11 @@ public class Utilities {
         }
     }
 
-    public Map<String, String> historySearchList() {
 
-        List<CitySearchFrqPair> srchdCityList = new ArrayList<>();
+    public Map<String, String> historySearchList() {
+        Hashtable<String, Integer> citySrhCount;
         citySrhCount = fileToHashmap(citySearchFile);
+        List<CitySearchFrqPair> srchdCityList = new ArrayList<>();
         // preparing list of CitySearchFrqPair from the hashtable.
         for (String key : Collections.list(citySrhCount.keys())) {
             srchdCityList.add(new CitySearchFrqPair(key, citySrhCount.get(key)));
@@ -64,8 +66,14 @@ public class Utilities {
         return citySearchFrequencyMap;
     }
 
+    public boolean isUrlValid(String url) {
+        Pattern pattern = Pattern.compile(URL_REGEX);
+        Matcher matcher = pattern.matcher(url);
+        return matcher.matches();
+    }
     public List<String> proceedWithManualInput(String locationIn) {
-
+        Hashtable<String, Integer> citySrhCount;
+        citySrhCount = fileToHashmap(citySearchFile);
         if (locationIn.charAt(locationIn.length() - 1) == '*') {
             locationIn = locationIn.substring(0, locationIn.length() - 1);
             // check if it is a valid string
@@ -82,10 +90,26 @@ public class Utilities {
                 }*/
             SpellChecker spellChecker = new SpellChecker("/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/Cities.txt");
             if (spellChecker.searchInTrie(locationIn)) {
-                System.out.println("Inside if block"); // Add print statement to check if block execution
                 System.out.println("LocationIn: " + locationIn + ", searchResult: " + spellChecker.searchInTrie(locationIn));
                 List<String> list = new ArrayList<>();
                 list.add(locationIn);
+                // recording the searched location in the history.
+                if (citySrhCount != null && citySrhCount.contains(locationIn)) {  // if city has been added already.
+                    citySrhCount.put(locationIn, citySrhCount.get(locationIn)+1);
+                }
+                else {
+                    citySrhCount.put(locationIn, 1);
+                }
+
+                // add searched city into history file
+                try (BufferedWriter BufferWriter = new BufferedWriter(new FileWriter(citySearchFile, true))) {
+                    BufferWriter.write(locationIn);
+                    BufferWriter.newLine(); // new line
+                    BufferWriter.close();
+                }
+                catch (IOException e) {
+                   System.out.println("Something went wrong while interacting with file");
+                }
                 return list;
             }  else {
                 List<String> suggestions = spellChecker.suggestCorrectionsCNC(locationIn);
@@ -98,6 +122,7 @@ public class Utilities {
                     for (int i = 0; i < suggestions.size(); i++) {
                         list.add(suggestions.get(i));
                     }
+
                     return list;
                         /*while (true) {
                             printOnConsole(cmd, "Does the list contain the city you want to search? (y/n)");
