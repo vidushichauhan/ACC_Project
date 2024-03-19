@@ -4,10 +4,7 @@ import org.fitness.services.FitnessService;
 import org.fitness.utilities.DealFinder;
 import org.fitness.utilities.HtmlParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.util.HashMap;
@@ -27,23 +24,29 @@ public class FitnessController {
 
     @GetMapping("/historySearchList/history") // when user wants to check history city count
     public Map<String, String> historySearchList(){
+
         return fitnessService.historySearchList();
     }
     @GetMapping("/manualSearchList/{location}")//checking users data manually
     public List<String> manualSearchList(@PathVariable("location") String location){
         return fitnessService.manualSearchList(location);
     }
-    //web crawling
+
     @RequestMapping("/webScrapping/{location}")
     public void webScrapper(@PathVariable("location") String location){
         fitnessService.webScrapper(location);
     }
 
-
-    //html parser
+    //html parser, spell checking, web crawling
     @RequestMapping("/parsing")
-    public void invertedIndexing(){
+    public void parsing(){
         fitnessService.parseWebsite();
+    }
+
+    //inverted indexing, page ranking, regex, frequency count
+    @RequestMapping("/invertedIndexing")
+    public void invertedIndexing(@RequestBody  Map filterParams){
+        fitnessService.invertedIndexing(filterParams);
     }
 
 

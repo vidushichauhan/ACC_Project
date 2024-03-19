@@ -1,5 +1,7 @@
 package org.fitness.utilities;
 
+import com.google.gson.Gson;
+
 import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -12,6 +14,7 @@ public class Utilities {
     public static final String citySearchFile = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/CitySearchHistory.txt";
     private static final String URL_REGEX = "(\\b(https?|ftp|file)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]";
 
+    Gson gson = new Gson();
     public Hashtable<String, Integer> fileToHashmap(String filePath) {
         Hashtable<String, Integer> srhCount = new Hashtable<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -33,7 +36,7 @@ public class Utilities {
     }
 
 
-    public Map<String, String> historySearchList() {
+    public String historySearchList() {
         Hashtable<String, Integer> citySrhCount;
         citySrhCount = fileToHashmap(citySearchFile);
         List<CitySearchFrqPair> srchdCityList = new ArrayList<>();
@@ -62,8 +65,8 @@ public class Utilities {
         for (String cityName : citySearchFrequencyMap.keySet()) {
             System.out.println(citySearchFrequencyMap.get(cityName));
         }
-
-        return citySearchFrequencyMap;
+        String citySearchFrequencyMapJson = gson.toJson(citySearchFrequencyMap);
+        return citySearchFrequencyMapJson;
     }
 
     public boolean isUrlValid(String url) {
@@ -81,13 +84,7 @@ public class Utilities {
             List<String> cmpltdWordList = wordCompletion.findWordsWithPrefix(locationIn);
 
             return cmpltdWordList;
-        } else { // spell checking logic when input is without *
-               /* while (!locationIn.matches("[a-zA-Z0-9.\\-'* ]+")) {
-                    System.out.println();
-                    //locationIn = scn.nextLine();
-                    scn.nextLine();   // clear the buffer
-                    return proceedWithManualInput();
-                }*/
+        } else {
             SpellChecker spellChecker = new SpellChecker("/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/Cities.txt");
             if (spellChecker.searchInTrie(locationIn)) {
                 System.out.println("LocationIn: " + locationIn + ", searchResult: " + spellChecker.searchInTrie(locationIn));
@@ -124,48 +121,8 @@ public class Utilities {
                     }
 
                     return list;
-                        /*while (true) {
-                            printOnConsole(cmd, "Does the list contain the city you want to search? (y/n)");
-                            String confirmation = scn.nextLine();
-                            if (confirmation.equals("y") || confirmation.equals("Y")) {
-                                printOnConsole(cmd, "Please enter the corrosponding number to proceed");
-                                byte choice = 0;
-                                try {
-                                    choice = scn.nextByte();
-                                    scn.nextLine();  // clearing buffer
-                                }
-                                catch (InputMismatchException ex) {
-                                    printOnConsole(msg, "Invalid input! Please try again");
-                                    scn.nextLine();   // to clear the buffer and avoid infinite loop.
-                                    return proceedWithManualInput();
-                                }
-                                if (choice > 0 && choice <= suggestions.size()) {
-                                    return suggestions.get(choice-1);
-                                }
-                                else {
-                                    printOnConsole(msg, "Invalid input! Please try again.");
-                                    return proceedWithHistory();
-                                }
-                            }
-                            else if (confirmation.equals("n") || confirmation.equals("N")) {
-                                printOnConsole(msg, "Please try again!");
-                                return proceedWithManualInput();
-                            }
-                            else {
-                                printOnConsole(msg, "Invalid input! Please try again.");
-                            }
-                        }
-                    }
+
                 }
-            }*/
-                }
-       /* else if (inChoice == 2) {  // starting from beginning.
-            return getLocationInput();
-        }
-        else {
-            printOnConsole(msg, "Invalid input! Please try again.");
-            return proceedWithManualInput();
-        }*/
             }
         }
         return null;
