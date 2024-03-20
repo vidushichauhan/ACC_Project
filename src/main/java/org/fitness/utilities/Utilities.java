@@ -36,7 +36,7 @@ public class Utilities {
     }
 
 
-    public String historySearchList() {
+    public Map<String, String> historySearchList() {
         Hashtable<String, Integer> citySrhCount;
         citySrhCount = fileToHashmap(citySearchFile);
         List<CitySearchFrqPair> srchdCityList = new ArrayList<>();
@@ -65,8 +65,8 @@ public class Utilities {
         for (String cityName : citySearchFrequencyMap.keySet()) {
             System.out.println(citySearchFrequencyMap.get(cityName));
         }
-        String citySearchFrequencyMapJson = gson.toJson(citySearchFrequencyMap);
-        return citySearchFrequencyMapJson;
+
+        return citySearchFrequencyMap;
     }
 
     public boolean isUrlValid(String url) {

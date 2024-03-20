@@ -13,6 +13,7 @@ import java.util.*;
 @Service
 public class FitnessServiceImpl implements FitnessService {
     private static DealFinder dealFinder = new DealFinder();
+    private static DealFinderAPIs dealFinderAPIs = new DealFinderAPIs();
     Utilities utl =new Utilities();
     private static FrequencyCount frequencyCount = new FrequencyCount();
     private static HtmlParser parser = new HtmlParser();
@@ -99,5 +100,21 @@ public class FitnessServiceImpl implements FitnessService {
         }
     }
 
+    @Override
+    public String ftDetails(String location) {
+        return dealFinderAPIs.webScraperForFT(location);
+    }
 
-}
+    @Override
+    public String glDetails(String location) {
+        return dealFinderAPIs.webScraperForGL(location);
+    }
+
+    @Override
+    public String pfDetails(String location) {
+        return dealFinderAPIs.webScraperForPF(location);
+    }
+    }
+
+
+

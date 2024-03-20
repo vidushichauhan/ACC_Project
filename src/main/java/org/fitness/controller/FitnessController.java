@@ -1,13 +1,9 @@
 package org.fitness.controller;
 
 import org.fitness.services.FitnessService;
-import org.fitness.utilities.DealFinder;
-import org.fitness.utilities.HtmlParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +23,8 @@ public class FitnessController {
 
         return fitnessService.historySearchList();
     }
+
+    //WordCompletion, SpellChecker
     @GetMapping("/manualSearchList/{location}")//checking users data manually
     public List<String> manualSearchList(@PathVariable("location") String location){
         return fitnessService.manualSearchList(location);
@@ -45,11 +43,23 @@ public class FitnessController {
 
     //inverted indexing, page ranking, regex, frequency count
     @RequestMapping("/invertedIndexing")
-    public void invertedIndexing(@RequestBody  Map filterParams){
+    public void invertedIndexing(@RequestBody Map filterParams) {
         fitnessService.invertedIndexing(filterParams);
     }
 
+    @RequestMapping("/getFTDetails/{location}")
+    public String ftDetails(@PathVariable("location") String location){
+        return fitnessService.ftDetails(location);
+    }
+    @RequestMapping("/getGlOutput/{location}")
+    public String glDetails(@PathVariable("location") String location){
+        return fitnessService.glDetails(location);
+    }
 
+    @RequestMapping("/getPFOutput/{location}")
+    public String pfDetails(@PathVariable("location") String location){
+        return fitnessService.pfDetails(location);
+    }
 
 
 }

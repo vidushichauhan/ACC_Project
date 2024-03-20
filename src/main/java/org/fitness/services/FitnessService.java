@@ -18,4 +18,10 @@ public interface FitnessService {
     public void parseWebsite();
 
     public void invertedIndexing(Map filterParams);
+
+    public String ftDetails(String location);
+
+    String glDetails(String location);
+
+    String pfDetails(String location);
 }
