@@ -18,6 +18,8 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.15.4'
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'com.googlecode.json-simple:json-simple:1.1'
+    implementation 'org.springframework.data:spring-data-mongodb:4.2.4'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.2.3'
 
 //    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.2.3'
 

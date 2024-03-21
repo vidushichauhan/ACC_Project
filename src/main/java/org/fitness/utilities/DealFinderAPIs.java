@@ -1,7 +1,12 @@
 package org.fitness.utilities;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mongodb.client.MongoClients;
+import org.fitness.classes.FitnessWorldMembership;
+import org.fitness.classes.GoodLifeMembership;
+import org.fitness.classes.PlanetFitnessMembership;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -9,16 +14,23 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DealFinderAPIs {
     private static final String CHROME_DRIVER_PATH = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/WebDriver/msedgedriver";
     private static final String FITNESS_WORLD_URL = "https://www.fitnessworld.ca/explore-memberships/";
     private static final String GOODLIFE_FITNESS_URL = "https://www.goodlifefitness.com/membership.html";
     private static final String PLATNET_FITNESS_URL = "https://www.planetfitness.ca/";
-    public String webScraperForFT(String cityName) {
+    MongoOperations mongoOps = new MongoTemplate(MongoClients.create(), "ACC_PROJECT");
+
+    public String  webScraperForFT(String cityName) {
         System.setProperty("webdriver.edge.driver", CHROME_DRIVER_PATH);
         WebDriver edgeWebDriver = new EdgeDriver();
         JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
@@ -71,8 +83,9 @@ try{
 
                 String membershipType = parts[0].trim();
                 String price = "$" + parts[1].trim();
-
-                memberships.add(new FitnessWorldMembership(membershipType,price, benefits));
+                FitnessWorldMembership obj = new FitnessWorldMembership(membershipType,"Fitness World",price, benefits);
+                mongoOps.save(obj,"plans");
+                memberships.add(new FitnessWorldMembership(membershipType,"Fitness World",price, benefits));
             }
 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -89,94 +102,107 @@ try{
             return null;
         }
     }
-    public String webScraperForGL(String cityName) {
-        System.setProperty("webdriver.edge.driver", CHROME_DRIVER_PATH);
-        WebDriver edgeWebDriver = new EdgeDriver();
-        JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
 
-        edgeWebDriver.manage().window().maximize();
-        edgeWebDriver.get(GOODLIFE_FITNESS_URL);
-        WebDriverWait wait = new WebDriverWait(edgeWebDriver, Duration.ofSeconds(50));
-        try {
-            WebElement performanceLabel = edgeWebDriver.findElement(By.cssSelector("label[for='performance-membership']"));
-            js.executeScript("arguments[0].scrollIntoView(true);", performanceLabel);
-            WebElement ultimateLabel = edgeWebDriver.findElement(By.cssSelector("label[for='ultimate-membership']"));
-            WebElement premiumLabel = edgeWebDriver.findElement(By.cssSelector("label[for='all-clubs-membership']"));
-            WebElement GLMainContainer = edgeWebDriver.findElement(By.className("c-membership-types-container"));
-            List<WebElement> prices = GLMainContainer.findElements(By.className("c-card--membership-price__dollar"));
-            List<WebElement> features = edgeWebDriver.findElements(By.cssSelector("tr.c-pricing-mobile__row"));
+    public String webScraperForGL(String location) {
+            System.setProperty("webdriver.edge.driver", CHROME_DRIVER_PATH);
+            WebDriver edgeWebDriver = new EdgeDriver();
+            JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
 
-            // Create a map to hold the membership types
-            Map<String, Object> glData = new LinkedHashMap<>();
-            List<Map<String, Object>> membershipTypes = new ArrayList<>();
-            Map<String, Object> glData_Premium = new LinkedHashMap<>();
-            glData_Premium.put("membershipType",premiumLabel.getText());
-            Map<String, Object> glData_Ultimate = new LinkedHashMap<>();
-            glData_Ultimate.put("membershipType",ultimateLabel.getText());
-            Map<String, Object> glData_Performance = new LinkedHashMap<>();
-            glData_Performance.put("membershipType",performanceLabel.getText());
-            List<String> premiumFeatures = new ArrayList<>();
-            List<String> ultimateFeatures = new ArrayList<>();
-            List<String> performanceFeature = new ArrayList<>();
-            for (WebElement feature : features) {
-                List<WebElement> unhighlightedCells = feature.findElements(By.cssSelector("td.c-pricing-mobile__available"));
-                WebElement highlightedCell = feature.findElement(By.cssSelector("td.col.c-pricing-mobile__available.highlight"));
+            edgeWebDriver.manage().window().maximize();
+            edgeWebDriver.get(GOODLIFE_FITNESS_URL);
+            WebDriverWait wait = new WebDriverWait(edgeWebDriver, Duration.ofSeconds(50));
+            try {
+                WebElement performanceLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("label[for='performance-membership']")));
+                WebElement ultimateLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("label[for='ultimate-membership']")));
+                WebElement premiumLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("label[for='all-clubs-membership']")));
 
-                Map<String, Object> membershipType = new LinkedHashMap<>();
+                js.executeScript("arguments[0].scrollIntoView(true);", performanceLabel);
 
-                // Extract unhighlighted features from the respective cells
-                for (WebElement cell : unhighlightedCells.get(4).findElements(By.tagName("li"))) {
-                    String text = cell.getText().trim();
-                    if (!text.isEmpty()) {
-                        premiumFeatures.add(text);
+                WebElement GLMainContainer = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("c-membership-types-container")));
+                List<WebElement> prices = GLMainContainer.findElements(By.className("c-card--membership-price__dollar"));
+                List<WebElement> features = edgeWebDriver.findElements(By.cssSelector("tr.c-pricing-mobile__row"));
+
+                // Create a map to hold the membership types
+                Map<String, Object> glData = new LinkedHashMap<>();
+                List<Map<String, Object>> membershipTypes = new ArrayList<>();
+                Map<String, Object> glData_Premium = new LinkedHashMap<>();
+                glData_Premium.put("membershipType", premiumLabel.getText());
+                Map<String, Object> glData_Ultimate = new LinkedHashMap<>();
+                glData_Ultimate.put("membershipType", ultimateLabel.getText());
+                Map<String, Object> glData_Performance = new LinkedHashMap<>();
+                glData_Performance.put("membershipType", performanceLabel.getText());
+                List<String> premiumFeatures = new ArrayList<>();
+                List<String> ultimateFeatures = new ArrayList<>();
+                List<String> performanceFeature = new ArrayList<>();
+
+                for (WebElement feature : features) {
+                    List<WebElement> unhighlightedCells = feature.findElements(By.cssSelector("td.c-pricing-mobile__available"));
+                    WebElement highlightedCell = feature.findElement(By.cssSelector("td.col.c-pricing-mobile__available.highlight"));
+
+                    Map<String, Object> membershipType = new LinkedHashMap<>();
+
+                    // Extract unhighlighted features from the respective cells
+                    for (WebElement cell : unhighlightedCells.get(4).findElements(By.tagName("li"))) {
+                        String text = cell.getText().trim();
+                        if (!text.isEmpty()) {
+                            premiumFeatures.add(text);
+                        }
+                    }
+
+                    for (WebElement cell : unhighlightedCells.get(6).findElements(By.tagName("li"))) {
+                        String text = cell.getText().trim();
+                        if (!text.isEmpty()) {
+                            ultimateFeatures.add(text);
+                        }
+                    }
+
+                    // Extract highlighted features from the highlighted cell
+                    for (WebElement cell : highlightedCell.findElements(By.tagName("li"))) {
+                        String text = cell.getText().trim();
+                        if (!text.isEmpty()) {
+                            performanceFeature.add(text);
+                        }
                     }
                 }
+                glData_Premium.put("gymName", "GOODLIFE_FITNESS");
+                glData_Ultimate.put("gymName", "GOODLIFE_FITNESS");
+                glData_Performance.put("gymName", "GOODLIFE_FITNESS");
+                glData_Premium.put("features", premiumFeatures);
+                glData_Ultimate.put("features", ultimateFeatures);
+                glData_Performance.put("features", performanceFeature);
+                List<Integer> priceList = getPrices(prices);
+                glData_Premium.put("price", "$"+priceList.get(0)+"/month");
+                glData_Ultimate.put("price","$"+priceList.get(1)+"/month");
+                glData_Performance.put("price", "$"+priceList.get(2)+"/month");
 
-                for (WebElement cell : unhighlightedCells.get(6).findElements(By.tagName("li"))) {
-                    String text = cell.getText().trim();
-                    if (!text.isEmpty()) {
-                        ultimateFeatures.add(text);
-                    }
-                }
+                ObjectMapper objectMapper = new ObjectMapper();
+                GoodLifeMembership gl1=objectMapper.convertValue(glData_Premium, GoodLifeMembership.class);
+                mongoOps.save(gl1,"plans");
+                GoodLifeMembership gl2=objectMapper.convertValue(glData_Ultimate, GoodLifeMembership.class);
+                mongoOps.save(gl2,"plans");
+                GoodLifeMembership gl3=objectMapper.convertValue(glData_Performance, GoodLifeMembership.class);
+                mongoOps.save(gl3,"plans");
+                membershipTypes.add(glData_Premium);
+                membershipTypes.add(glData_Ultimate);
+                membershipTypes.add(glData_Performance);
 
-                // Extract highlighted features from the highlighted cell
-                for (WebElement cell : highlightedCell.findElements(By.tagName("li"))) {
-                    String text = cell.getText().trim();
-                    if (!text.isEmpty()) {
-                        performanceFeature.add(text);
-                    }
-                }
+                // Convert the map to JSON using Gson
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                String json = gson.toJson(membershipTypes);
 
+                edgeWebDriver.quit(); // Quit the WebDriver
+
+                return json; // Return the JSON string
+            } catch (Exception e) {
+                e.printStackTrace();
+                edgeWebDriver.quit();
+                return null;
             }
-            glData_Premium.put("premiumFeatures",premiumFeatures);
-            glData_Ultimate.put("ultimateFeatures",ultimateFeatures);
-            glData_Performance.put("performanceFeature",performanceFeature);
-            List<Integer> priceList =getPrices(prices);
-            Integer firstPrice = priceList.get(0);
-            Integer secondPrice = priceList.get(1);
-            Integer thirdPrice = priceList.get(2);
-            glData_Premium.put("prices",firstPrice);
-            glData_Ultimate.put("prices",secondPrice);
-            glData_Performance.put("prices",thirdPrice);
 
-            membershipTypes.add(glData_Premium);
-            membershipTypes.add(glData_Ultimate);
-            membershipTypes.add(glData_Performance);
-            glData.put("MembershipTypes", membershipTypes); // Add the list of membership types to the main map
 
-            // Convert the map to JSON using Gson
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String json = gson.toJson(glData);
-
-            edgeWebDriver.quit(); // Quit the WebDriver
-
-            return json; // Return the JSON string
-        } catch (Exception e) {
-            e.printStackTrace();
-            edgeWebDriver.quit();
-            return null;
-        }
     }
+
+
     public String webScraperForPF(String location) {
         System.setProperty("webdriver.edge.driver", CHROME_DRIVER_PATH);
         WebDriver edgeWebDriver = new EdgeDriver();
@@ -218,13 +244,16 @@ try{
             String[] features1List = features1.split("\\n");
             String features2= edgeWebDriver.findElement(By.xpath("/html/body/div[1]/div[6]/div/div/div[2]/div/div/div[2]/div/div[4]/ul")).getText();
             String[] features2List = features2.split("\\n");
-            PlanetFitnessMembership plmembershipType1 = new PlanetFitnessMembership(membershipType1,features1List,price1);
-            PlanetFitnessMembership plmembershipType2 = new PlanetFitnessMembership(membershipType2,features2List,price2);
+            PlanetFitnessMembership plmembershipType1 = new PlanetFitnessMembership(membershipType1, features1List, price1);
+            PlanetFitnessMembership plmembershipType2 = new PlanetFitnessMembership(membershipType2, features2List, price2);
             List<PlanetFitnessMembership> membershipList = new ArrayList<>();
+            mongoOps.save(plmembershipType1,"plans");
+            mongoOps.save(plmembershipType2,"plans");
             membershipList.add(plmembershipType1);
             membershipList.add(plmembershipType2);
             Gson gson = new Gson();
             String json = gson.toJson(membershipList);
+            //mongoOps.save(json);
             return json;
         }
         catch(Exception e){
@@ -263,28 +292,6 @@ try{
         }
     }
 
-    private static class PlanetFitnessMembership {
-        private final String membershipType;
-        String[] features;
-        private final String price;
 
-        public PlanetFitnessMembership(String membershipType, String[] features,String price) {
-            this.membershipType = membershipType;
-            this.features = features;
-            this.price =price;
-        }
-    }
 
-    // Inner class to represent Fitness World Membership
-    private static class FitnessWorldMembership {
-        private final String membershipType;
-        private final String price;
-        private final List<String> features;
-
-        public FitnessWorldMembership(String membershipType,String price, List<String> features) {
-            this.membershipType = membershipType;
-            this.price= price;
-            this.features = features;
-        }
-    }
 }

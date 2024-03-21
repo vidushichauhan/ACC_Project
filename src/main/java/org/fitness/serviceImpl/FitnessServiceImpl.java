@@ -56,7 +56,7 @@ public class FitnessServiceImpl implements FitnessService {
     }
 
     @Override
-    public void invertedIndexing(Map filterParams) {
+    public String invertedIndexing(Map filterParams) {
         i_index = invertedIndexing.buildInvertedIndex();
         if (i_index != null) {
             String input = filterParams.get("text").toString().toLowerCase();
@@ -84,20 +84,30 @@ public class FitnessServiceImpl implements FitnessService {
                 List<String> keywordsList = Arrays.asList(in_arr);
                 List<Map.Entry<String, Integer>> keywordFrequencyMap = frequencyCount.getFrequencyCount(matchedDocsList, keywordsList);
 
-                if (keywordFrequencyMap.size() > 0) {
-                    System.out.println("Here are the list of most relavent sites for your search");
-                    int count=1;
-                    for (Map.Entry<String, Integer> entry : keywordFrequencyMap) {
-                        System.out.println(count++ +". "+ entry.getKey() + "\t(total " + entry.getValue() + " Occurrence)");
+            if (!keywordFrequencyMap.isEmpty()) {
+                StringBuilder jsonOutput = new StringBuilder();
+                int count = 1;
+                jsonOutput.append("{ \"relevantSites\": [");
+                for (Map.Entry<String, Integer> entry : keywordFrequencyMap) {
+                    jsonOutput.append("{")
+                            .append("\"site\": \"").append(entry.getKey()).append("\", ")
+                            .append("\"occurrences\": ").append(entry.getValue())
+                            .append("}");
+                    if (count < keywordFrequencyMap.size()) {
+                        jsonOutput.append(", ");
                     }
+                    count++;
                 }
-                else {
-                    System.out.println( "Nothing found related to your search! Try something else related to a gym and fitness");
-                }
+                jsonOutput.append("] }");
+                return jsonOutput.toString();
+            } else {
+                return "{ \"message\": \"Nothing found related to your search! Try something else related to a gym and fitness\" }";
+            }
 
 
 
         }
+        return null;
     }
 
     @Override

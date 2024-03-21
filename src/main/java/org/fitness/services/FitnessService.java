@@ -17,9 +17,9 @@ public interface FitnessService {
 
     public void parseWebsite();
 
-    public void invertedIndexing(Map filterParams);
+    public String invertedIndexing(Map filterParams);
 
-    public String ftDetails(String location);
+    public String  ftDetails(String location);
 
     String glDetails(String location);
 

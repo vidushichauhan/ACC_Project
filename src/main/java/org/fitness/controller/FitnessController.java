@@ -43,8 +43,8 @@ public class FitnessController {
 
     //inverted indexing, page ranking, regex, frequency count
     @RequestMapping("/invertedIndexing")
-    public void invertedIndexing(@RequestBody Map filterParams) {
-        fitnessService.invertedIndexing(filterParams);
+    public String invertedIndexing(@RequestBody Map filterParams) {
+        return fitnessService.invertedIndexing(filterParams);
     }
 
     @RequestMapping("/getFTDetails/{location}")
