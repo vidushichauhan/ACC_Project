@@ -77,14 +77,14 @@ public class Utilities {
     public List<String> proceedWithManualInput(String locationIn) {
         Hashtable<String, Integer> citySrhCount;
         citySrhCount = fileToHashmap(citySearchFile);
-        if (locationIn.charAt(locationIn.length() - 1) == '*') {
+
             locationIn = locationIn.substring(0, locationIn.length() - 1);
             // check if it is a valid string
             WordCompletion wordCompletion = new WordCompletion("/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/Cities.txt");
             List<String> cmpltdWordList = wordCompletion.findWordsWithPrefix(locationIn);
-
-            return cmpltdWordList;
-        } else {
+            if(cmpltdWordList.size()>0){
+            return cmpltdWordList;}
+            else{
             SpellChecker spellChecker = new SpellChecker("/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/Cities.txt");
             if (spellChecker.searchInTrie(locationIn)) {
                 System.out.println("LocationIn: " + locationIn + ", searchResult: " + spellChecker.searchInTrie(locationIn));

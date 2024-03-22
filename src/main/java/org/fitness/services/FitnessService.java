@@ -24,4 +24,6 @@ public interface FitnessService {
     String glDetails(String location);
 
     String pfDetails(String location);
+
+    List<Map> bestDeals();
 }

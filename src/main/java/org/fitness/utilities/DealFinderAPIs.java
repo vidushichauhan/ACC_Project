@@ -17,6 +17,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -244,8 +246,8 @@ try{
             String[] features1List = features1.split("\\n");
             String features2= edgeWebDriver.findElement(By.xpath("/html/body/div[1]/div[6]/div/div/div[2]/div/div/div[2]/div/div[4]/ul")).getText();
             String[] features2List = features2.split("\\n");
-            PlanetFitnessMembership plmembershipType1 = new PlanetFitnessMembership(membershipType1, features1List, price1);
-            PlanetFitnessMembership plmembershipType2 = new PlanetFitnessMembership(membershipType2, features2List, price2);
+            PlanetFitnessMembership plmembershipType1 = new PlanetFitnessMembership(membershipType1, "Planet_Fitness",features1List, price1);
+            PlanetFitnessMembership plmembershipType2 = new PlanetFitnessMembership(membershipType2, "Planet_Fitness",features2List, price2);
             List<PlanetFitnessMembership> membershipList = new ArrayList<>();
             mongoOps.save(plmembershipType1,"plans");
             mongoOps.save(plmembershipType2,"plans");
@@ -292,6 +294,11 @@ try{
         }
     }
 
+
+    public List<Map> bestDeals() {
+
+        return mongoOps.findAll(Map.class,"plans");
+    }
 
 
 }

@@ -61,5 +61,10 @@ public class FitnessController {
         return fitnessService.pfDetails(location);
     }
 
+    @RequestMapping("/bestDeals")
+    public List<Map> bestDeals(){
+        return fitnessService.bestDeals();
+    }
+
 
 }

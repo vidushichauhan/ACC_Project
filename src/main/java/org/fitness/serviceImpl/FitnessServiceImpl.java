@@ -9,6 +9,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class FitnessServiceImpl implements FitnessService {
@@ -124,7 +127,28 @@ public class FitnessServiceImpl implements FitnessService {
     public String pfDetails(String location) {
         return dealFinderAPIs.webScraperForPF(location);
     }
+
+    public List<Map> bestDeals() {
+        List<Map> allDeals = dealFinderAPIs.bestDeals();
+
+        List<Map> top3Deals = allDeals.stream()
+                .sorted(Comparator.comparingInt(deal -> (int) getPriceFromDeal((String) ((Map) deal).get("price"))))
+                .sorted(Comparator.comparingInt(deal -> ((List<String>) ((Map) deal).get("features")).size()).reversed())
+                .limit(3)
+                .collect(Collectors.toList());
+
+        return top3Deals; // or return top3Deals if needed
     }
+
+    private double getPriceFromDeal(String priceString) {
+        Pattern pattern = Pattern.compile("\\d+(\\.\\d+)?");
+        Matcher matcher = pattern.matcher(priceString);
+        if (matcher.find()) {
+            return Double.parseDouble(matcher.group());
+        }
+        return Double.MAX_VALUE; // Return max value if price cannot be parsed
+    }
+}
 
 
 
