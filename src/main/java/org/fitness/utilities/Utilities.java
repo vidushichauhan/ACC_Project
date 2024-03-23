@@ -75,6 +75,12 @@ public class Utilities {
         return matcher.matches();
     }
     public List<String> proceedWithManualInput(String locationIn) {
+        String regex = ".*[^a-zA-Z]+.*";
+        ArrayList caseHandlinglist = new ArrayList();
+        if (locationIn.matches(regex)) {
+            caseHandlinglist.add("please type alphabet for search");
+            return caseHandlinglist;
+        }
         Hashtable<String, Integer> citySrhCount;
         citySrhCount = fileToHashmap(citySearchFile);
 
@@ -120,12 +126,18 @@ public class Utilities {
                         list.add(suggestions.get(i));
                     }
 
+                    if(list.size()==0){
+                        caseHandlinglist.add("you are typing wrong..!!");
+                        return caseHandlinglist;
+                    }
                     return list;
 
                 }
             }
         }
-        return null;
+        caseHandlinglist.add("you are typing wrong..!!");
+        return caseHandlinglist;
+        //return null;
     }
 }
 

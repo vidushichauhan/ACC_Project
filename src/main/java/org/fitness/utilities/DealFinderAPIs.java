@@ -11,13 +11,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
-
-
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -26,15 +24,15 @@ import java.util.List;
 import java.util.Map;
 
 public class DealFinderAPIs {
-    private static final String CHROME_DRIVER_PATH = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/WebDriver/msedgedriver";
+    private static final String CHROME_DRIVER_PATH = "/Users/vidushichauhan/IdeaProjects/WebScrapping/chromedriver";
     private static final String FITNESS_WORLD_URL = "https://www.fitnessworld.ca/explore-memberships/";
     private static final String GOODLIFE_FITNESS_URL = "https://www.goodlifefitness.com/membership.html";
     private static final String PLATNET_FITNESS_URL = "https://www.planetfitness.ca/";
     MongoOperations mongoOps = new MongoTemplate(MongoClients.create(), "ACC_PROJECT");
 
     public String  webScraperForFT(String cityName) {
-        System.setProperty("webdriver.edge.driver", CHROME_DRIVER_PATH);
-        WebDriver edgeWebDriver = new EdgeDriver();
+        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
+        WebDriver edgeWebDriver = new ChromeDriver();
         JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
 
         edgeWebDriver.manage().window().maximize();
@@ -105,9 +103,9 @@ try{
         }
     }
 
-    public String webScraperForGL(String location) {
-            System.setProperty("webdriver.edge.driver", CHROME_DRIVER_PATH);
-            WebDriver edgeWebDriver = new EdgeDriver();
+   public String webScraperForGL(String location) {
+            System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
+            WebDriver edgeWebDriver = new ChromeDriver();
             JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
 
             edgeWebDriver.manage().window().maximize();
@@ -205,9 +203,10 @@ try{
     }
 
 
+
     public String webScraperForPF(String location) {
-        System.setProperty("webdriver.edge.driver", CHROME_DRIVER_PATH);
-        WebDriver edgeWebDriver = new EdgeDriver();
+        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
+        WebDriver edgeWebDriver = new ChromeDriver();
         JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
 
         edgeWebDriver.manage().window().maximize();
@@ -256,6 +255,7 @@ try{
             Gson gson = new Gson();
             String json = gson.toJson(membershipList);
             //mongoOps.save(json);
+            edgeWebDriver.quit();
             return json;
         }
         catch(Exception e){

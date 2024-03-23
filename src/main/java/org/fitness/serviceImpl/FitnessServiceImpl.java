@@ -25,6 +25,7 @@ public class FitnessServiceImpl implements FitnessService {
     public static Map<String, Set<String>> i_index;
     public static final String keywordSearchFile = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/KeySearchHistory.txt";
     private static InvertedIndexing invertedIndexing = new InvertedIndexing();
+    private static InvertedIndexingAVL  invertedIndexingAVL = new InvertedIndexingAVL();
     public Map<String, String> historySearchList() {
         // To get list of cities that were searched before
         return utl.historySearchList();
@@ -60,32 +61,32 @@ public class FitnessServiceImpl implements FitnessService {
 
     @Override
     public String invertedIndexing(Map filterParams) {
-        i_index = invertedIndexing.buildInvertedIndex();
+        i_index = invertedIndexingAVL.buildInvertedIndex();
         if (i_index != null) {
             String input = filterParams.get("text").toString().toLowerCase();
-                // add searched city into history file
-                try (BufferedWriter BufferWriter = new BufferedWriter(new FileWriter(keywordSearchFile, true))) {
-                    BufferWriter.write(input);
-                    BufferWriter.newLine(); // new line
-                    BufferWriter.close();
-                }
-                catch (IOException e) {
-                    System.out.println("Something went wrong while interacting with file");
-                }
+            // add searched city into history file
+            try (BufferedWriter BufferWriter = new BufferedWriter(new FileWriter(keywordSearchFile, true))) {
+                BufferWriter.write(input);
+                BufferWriter.newLine(); // new line
+                BufferWriter.close();
+            }
+            catch (IOException e) {
+                System.out.println("Something went wrong while interacting with file");
+            }
 
-                // processing valid input
-                String[] in_arr = input.split(" ");
-                // storing files that contain given keyword
-                Set<String> matchedDocs = new HashSet<>();
-                for (String keyword : in_arr) {
-                    if (i_index.get(keyword) != null)
-                        matchedDocs.addAll(i_index.get(keyword));
-                }
+            // processing valid input
+            String[] in_arr = input.split(" ");
+            // storing files that contain given keyword
+            Set<String> matchedDocs = new HashSet<>();
+            for (String keyword : in_arr) {
+                if (i_index.get(keyword) != null)
+                    matchedDocs.addAll(i_index.get(keyword));
+            }
 
-                // processing inverted index to get frequency count and page ranking
-                List<String> matchedDocsList = new ArrayList<>(); matchedDocsList.addAll(matchedDocs);
-                List<String> keywordsList = Arrays.asList(in_arr);
-                List<Map.Entry<String, Integer>> keywordFrequencyMap = frequencyCount.getFrequencyCount(matchedDocsList, keywordsList);
+            // processing inverted index to get frequency count and page ranking
+            List<String> matchedDocsList = new ArrayList<>(); matchedDocsList.addAll(matchedDocs);
+            List<String> keywordsList = Arrays.asList(in_arr);
+            List<Map.Entry<String, Integer>> keywordFrequencyMap = frequencyCount.getFrequencyCount(matchedDocsList, keywordsList);
 
             if (!keywordFrequencyMap.isEmpty()) {
                 StringBuilder jsonOutput = new StringBuilder();
@@ -149,6 +150,3 @@ public class FitnessServiceImpl implements FitnessService {
         return Double.MAX_VALUE; // Return max value if price cannot be parsed
     }
 }
-
-
-

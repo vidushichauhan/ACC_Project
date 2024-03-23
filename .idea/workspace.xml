@@ -5,16 +5,141 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dbb44a92-9123-406d-883e-c4c801067d63" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/fitness/classes/AVLTree.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/InvertedIndexingAVL.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/chromedriver" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/classes/PlanetFitnessMembership.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/classes/PlanetFitnessMembership.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/controller/FitnessController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/controller/FitnessController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/services/FitnessService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/services/FitnessService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/InvertedIndexUsingAVL.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/Files/Cities.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Files/Cities.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/Files/CitySearchHistory.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Files/CitySearchHistory.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/Files/KeySearchHistory.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Files/KeySearchHistory.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_10-minute-ab-workout-you-can-do-every-day.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_10-quick-and-nutritious-recipes#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_10-quick-and-nutritious-recipes#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_10-quick-and-nutritious-recipes#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_10-quick-and-nutritious-recipes.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_20-minute-conditioning-workout.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_30-day-ab-challenge-for-a-stronger-core.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_30-day-self-care-challenge#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_30-day-self-care-challenge#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_30-day-self-care-challenge#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_30-day-self-care-challenge.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_4-signs-youre-suffering-from-burnout#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_4-signs-youre-suffering-from-burnout#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_4-signs-youre-suffering-from-burnout#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_4-signs-youre-suffering-from-burnout.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_5-bad-pieces-of-fitness-advice.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_5-ways-to-beat-the-winter-blues-this-february#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_5-ways-to-beat-the-winter-blues-this-february#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_5-ways-to-beat-the-winter-blues-this-february#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_5-ways-to-beat-the-winter-blues-this-february.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_6-workout-mistakes-you-might-be-making.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_8-tips-for-working-out-in-the-summer-heat.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_chiselled-waist-workout.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_fix-your-lower-back-pain-workout.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_foods-that-fight-inflammation#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_foods-that-fight-inflammation#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_foods-that-fight-inflammation#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_foods-that-fight-inflammation.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_full-body-cable-machine-workout.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_full-body-single-station-workout.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_get-into-functional-fitness-with-these-6-simple-exercises.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_glute-activation-warmup.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_goodlife-30-hard-challenge.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_hypertrophy-training-glute-workout.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_intense-full-body-strength-workout.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_macro-and-nutrient-cheat-sheet#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_macro-and-nutrient-cheat-sheet#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_macro-and-nutrient-cheat-sheet#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_macro-and-nutrient-cheat-sheet.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_make-the-most-out-of-late-summer-produce#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_make-the-most-out-of-late-summer-produce#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_make-the-most-out-of-late-summer-produce#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_make-the-most-out-of-late-summer-produce.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_starbucks-hacks#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_starbucks-hacks#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_starbucks-hacks#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_starbucks-hacks.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_stop-injuries-before-they-happen#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_stop-injuries-before-they-happen#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_stop-injuries-before-they-happen#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_stop-injuries-before-they-happen.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_article_working-out-in-the-summer-heat.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_fuel_meal-planning.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_fuel_nutrition.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_fuel_recipes.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_fuel_weight-loss.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_goodlife-kitchen_.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_goodlife_.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_kelly-musovic_.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_kim-jory_.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_kirstin-schell_.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_latest#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_latest#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_latest#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_latest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_live_lifestyle.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_live_member-stories.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_live_mindfulness.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_live_motivation.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_move#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_move#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_move#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_move_fitness-advice.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_move_group-fitness.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_move_latest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_move_trending.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_move_weight-loss.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_move_workouts.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_a-taste-of-italy-linguine-marinara.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_bbq-chicken-pizza.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_charred-power-salad#.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_charred-power-salad#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_charred-power-salad#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_charred-power-salad#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_charred-power-salad.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_chicken-ramen.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_chickpea-salad.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_chipotle-chicken-thighs.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_one-pot-meals-philly-cheesesteak-bowls.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_sweet-treats-made-healthy-keto-blueberry-muffins.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_the-ultimate-grilled-cheese.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_turmeric-and-pineapple-superfood-smoothie.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_vegan-winter-buddha-bowl#.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_vegan-winter-buddha-bowl#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_vegan-winter-buddha-bowl#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_vegan-winter-buddha-bowl#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_vegan-winter-buddha-bowl.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_recipe_vegan-winter-kale-salad.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_trending#collapse-fuel.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_trending#collapse-live.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_trending#collapse-move.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__blog~goodlifefitness~com_trending.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__ca~linkedin~com_company_goodlifefitness.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__disqus~com_?ref_noscript.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__greatist~com_eat_healthy-eggplant-recipes#33.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__returntonow~net_2018_09_23_study-produce-loses-around-half-its-vitamin-content-within-a-week-of-harvest_.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__thecleaneatingcouple~com_30-healthy-apple-recipes_.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__twitter~com_GoodLifeFitness.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__www150~statcan~gc~ca_n1_pub_82-003-x_2022003_article_00001-eng~htm.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__www150~statcan~gc~ca_n1_pub_82-624-x_2011001_article_11506-eng~htm.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__www~countryliving~com_food-drinks_g4588_healthy-pumpkin-recipes_.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__www~eatingwell~com_recipes_19214_ingredients_fruit_pear_.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__www~facebook~com_goodlifefitness_.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__www~goodlifefitness~com_accessibility.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__www~goodlifefitness~com_privacy-policy.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__www~healthline~com_nutrition_mediterranean-diet-meal-plan#the-basics.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__www~healthyseasonalrecipes~com_20-healthy-cranberry-recipes_.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ParsedFiles/https@__www~youtube~com_goodlifefitness.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +233,7 @@
     "Spring Boot.Main.executor": "Run",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files",
+    "last_opened_file_path": "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -127,9 +252,9 @@
       <recent name="org.fitness.serviceImpl" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$/src/main/resources/Files" />
       <recent name="$PROJECT_DIR$/src/main/java/org/fitness/utilities" />
-      <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$/src/main/resources/WebDriver" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -257,7 +382,8 @@
       <updated>1710353743094</updated>
       <workItem from="1710353744119" duration="27977000" />
       <workItem from="1710723328104" duration="24512000" />
-      <workItem from="1710883172637" duration="74478000" />
+      <workItem from="1710883172637" duration="88567000" />
+      <workItem from="1711154118859" duration="4510000" />
     </task>
     <servers />
   </component>
@@ -498,21 +624,6 @@
           <option name="timeStamp" value="231" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java</url>
-          <line>85</line>
-          <option name="timeStamp" value="245" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java</url>
-          <line>87</line>
-          <option name="timeStamp" value="246" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java</url>
-          <line>89</line>
-          <option name="timeStamp" value="248" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/FrequencyCount.java</url>
           <line>14</line>
           <option name="timeStamp" value="254" />
@@ -588,103 +699,98 @@
           <option name="timeStamp" value="277" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java</url>
-          <line>79</line>
-          <option name="timeStamp" value="278" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
           <line>43</line>
           <option name="timeStamp" value="279" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>78</line>
+          <line>84</line>
           <option name="timeStamp" value="281" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>82</line>
+          <line>88</line>
           <option name="timeStamp" value="283" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>85</line>
+          <line>91</line>
           <option name="timeStamp" value="284" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>87</line>
+          <line>93</line>
           <option name="timeStamp" value="285" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>88</line>
+          <line>94</line>
           <option name="timeStamp" value="286" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>90</line>
+          <line>96</line>
           <option name="timeStamp" value="287" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>93</line>
+          <line>99</line>
           <option name="timeStamp" value="288" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>94</line>
+          <line>100</line>
           <option name="timeStamp" value="289" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>97</line>
+          <line>103</line>
           <option name="timeStamp" value="290" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>102</line>
+          <line>108</line>
           <option name="timeStamp" value="291" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>103</line>
+          <line>109</line>
           <option name="timeStamp" value="292" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>107</line>
+          <line>113</line>
           <option name="timeStamp" value="293" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>112</line>
+          <line>118</line>
           <option name="timeStamp" value="294" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>111</line>
+          <line>117</line>
           <option name="timeStamp" value="295" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>114</line>
+          <line>120</line>
           <option name="timeStamp" value="296" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>117</line>
+          <line>123</line>
           <option name="timeStamp" value="297" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>119</line>
+          <line>125</line>
           <option name="timeStamp" value="299" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
-          <line>122</line>
+          <line>132</line>
           <option name="timeStamp" value="300" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -699,12 +805,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>246</line>
+          <line>245</line>
           <option name="timeStamp" value="398" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>244</line>
+          <line>243</line>
           <option name="timeStamp" value="399" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -724,12 +830,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>245</line>
+          <line>244</line>
           <option name="timeStamp" value="403" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>247</line>
+          <line>246</line>
           <option name="timeStamp" value="404" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -739,113 +845,113 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>50</line>
+          <line>48</line>
           <option name="timeStamp" value="409" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>52</line>
+          <line>50</line>
           <option name="timeStamp" value="410" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>55</line>
+          <line>53</line>
           <option name="timeStamp" value="411" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>57</line>
+          <line>55</line>
           <option name="timeStamp" value="413" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>60</line>
+          <line>58</line>
           <option name="timeStamp" value="414" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>64</line>
+          <line>62</line>
           <option name="timeStamp" value="415" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>70</line>
+          <line>68</line>
           <option name="timeStamp" value="416" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>67</line>
+          <line>65</line>
           <option name="timeStamp" value="417" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>73</line>
+          <line>71</line>
           <option name="timeStamp" value="418" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>74</line>
+          <line>72</line>
           <option name="timeStamp" value="419" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>98</line>
+          <line>96</line>
           <option name="timeStamp" value="425" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>160</line>
+          <line>158</line>
           <option name="timeStamp" value="446" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>35</line>
-          <option name="timeStamp" value="449" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>208</line>
+          <line>207</line>
           <option name="timeStamp" value="450" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>212</line>
+          <line>211</line>
           <option name="timeStamp" value="451" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>214</line>
+          <line>213</line>
           <option name="timeStamp" value="452" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>216</line>
+          <line>215</line>
           <option name="timeStamp" value="453" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>220</line>
+          <line>219</line>
           <option name="timeStamp" value="454" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
-          <line>222</line>
+          <line>221</line>
           <option name="timeStamp" value="455" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java</url>
-          <line>64</line>
-          <option name="timeStamp" value="456" />
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
+          <line>89</line>
+          <option name="timeStamp" value="459" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java</url>
-          <line>63</line>
-          <option name="timeStamp" value="457" />
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
+          <line>80</line>
+          <option name="timeStamp" value="460" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java</url>
-          <line>66</line>
-          <option name="timeStamp" value="458" />
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>
+          <line>81</line>
+          <option name="timeStamp" value="461" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+          <line>34</line>
+          <option name="timeStamp" value="462" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
