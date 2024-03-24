@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class Utilities {
 
 
-    public static final String citySearchFile = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/CitySearchHistory.txt";
+    public static final String citySearchFile = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/Files/CitySearchHistory.txt";
     private static final String URL_REGEX = "(\\b(https?|ftp|file)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]";
 
     Gson gson = new Gson();
@@ -55,7 +55,7 @@ public class Utilities {
             String cityName = srchdCityList.get(i).cityName;
             int frequency = srchdCityList.get(i).frq;
 
-            String formattedString = (i + 1) + ". " + cityName + "\t\tsearched " + frequency + " times";
+            String formattedString = String.valueOf(frequency) ;
 
             // Using the city name as the key and the formatted string as the value
             citySearchFrequencyMap.put(cityName, formattedString);
@@ -86,12 +86,12 @@ public class Utilities {
 
             locationIn = locationIn.substring(0, locationIn.length() - 1);
             // check if it is a valid string
-            WordCompletion wordCompletion = new WordCompletion("/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/Cities.txt");
+            WordCompletion wordCompletion = new WordCompletion("/Users/rohansethi/Downloads/ACC_Project/src/main/resources/Files/Cities.txt");
             List<String> cmpltdWordList = wordCompletion.findWordsWithPrefix(locationIn);
             if(cmpltdWordList.size()>0){
             return cmpltdWordList;}
             else{
-            SpellChecker spellChecker = new SpellChecker("/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/Cities.txt");
+            SpellChecker spellChecker = new SpellChecker("/Users/rohansethi/Downloads/ACC_Project/src/main/resources/Files/Cities.txt");
             if (spellChecker.searchInTrie(locationIn)) {
                 System.out.println("LocationIn: " + locationIn + ", searchResult: " + spellChecker.searchInTrie(locationIn));
                 List<String> list = new ArrayList<>();

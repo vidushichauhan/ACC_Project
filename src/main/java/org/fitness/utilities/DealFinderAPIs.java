@@ -24,14 +24,14 @@ import java.util.List;
 import java.util.Map;
 
 public class DealFinderAPIs {
-    private static final String CHROME_DRIVER_PATH = "/Users/vidushichauhan/IdeaProjects/WebScrapping/chromedriver";
+    private static final String CHROME_DRIVER_PATH = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/WebDriver/msedgedriver";
     private static final String FITNESS_WORLD_URL = "https://www.fitnessworld.ca/explore-memberships/";
     private static final String GOODLIFE_FITNESS_URL = "https://www.goodlifefitness.com/membership.html";
     private static final String PLATNET_FITNESS_URL = "https://www.planetfitness.ca/";
     MongoOperations mongoOps = new MongoTemplate(MongoClients.create(), "ACC_PROJECT");
 
     public String  webScraperForFT(String cityName) {
-        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
+        System.setProperty("webdriver.chrome.driver", "/Users/rohansethi/Downloads/Assignment_3/chromedriver");
         WebDriver edgeWebDriver = new ChromeDriver();
         JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
 
@@ -103,10 +103,13 @@ try{
         }
     }
 
-   public String webScraperForGL(String location) {
-            System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
-            WebDriver edgeWebDriver = new ChromeDriver();
-            JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
+    public String webScraperForGL(String location) {
+        // Define the system property to specify the path of ChromeDriver executable
+        System.setProperty("webdriver.chrome.driver", "/Users/rohansethi/Downloads/Assignment_3/chromedriver");
+
+        // Initialize a new instance of ChromeDriver to control the Chrome browser
+        WebDriver edgeWebDriver = new ChromeDriver();
+        JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
 
             edgeWebDriver.manage().window().maximize();
             edgeWebDriver.get(GOODLIFE_FITNESS_URL);
@@ -203,9 +206,8 @@ try{
     }
 
 
-
     public String webScraperForPF(String location) {
-        System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
+        System.setProperty("webdriver.chrome.driver", "/Users/rohansethi/Downloads/Assignment_3/chromedriver");
         WebDriver edgeWebDriver = new ChromeDriver();
         JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
 

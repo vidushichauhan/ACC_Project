@@ -5,7 +5,7 @@ import java.util.*;
 
 public class FrequencyCount {
 
-	public final String outputFolderName = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/ParsedFiles";
+	public final String outputFolderName = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/ParsedFiles";
 	private Utilities utl = new Utilities();
 	private String[] keywords;
 	private List<String> filesList = new ArrayList<>();
@@ -28,7 +28,7 @@ public class FrequencyCount {
         for (String fileCNC : files) {
             Map<String, Integer> frequencyMap = new HashMap<>();
 
-            try (BufferedReader redrCNC = new BufferedReader(new FileReader(new File("/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/ParsedFiles/" + fileCNC)))) {
+            try (BufferedReader redrCNC = new BufferedReader(new FileReader(new File("/Users/rohansethi/Downloads/ACC_Project/src/main/resources/ParsedFiles/" + fileCNC)))) {
                 String lineCNC;
 
                 while ((lineCNC = redrCNC.readLine()) != null) {

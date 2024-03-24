@@ -11,8 +11,8 @@ public class HtmlParser {
 
     private File[] htmlFiles;
     private String outputFolder;
-	public static final String outputFolderName = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/ParsedFiles";
-	public static final String gymUrls = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/GymContentUrls.txt";
+	public static final String outputFolderName = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/ParsedFiles";
+	public static final String gymUrls = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/Files/GymContentUrls.txt";
 	private Utilities utl;
 	private WebCrawler webCrawler = new WebCrawler();
     

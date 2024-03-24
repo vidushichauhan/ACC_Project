@@ -1,17 +1,5 @@
 package org.fitness.utilities;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -20,13 +8,20 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class DealFinder {
 
   private Utilities utl = new Utilities();
 
   public void webScrapper(String cityName) {
 
-    System.setProperty("webdriver.edge.driver", "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/WebDriver/msedgedriver");
+    System.setProperty("webdriver.edge.driver", "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/WebDriver/msedgedriver");
     WebDriver edgeWebDriver = new EdgeDriver();
 
     //minimized edge browser is being enlarged

@@ -1,0 +1,926 @@
+Index: src/main/java/org/fitness/utilities/DealFinder.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.fitness.utilities;\r\n\r\nimport java.io.FileWriter;\r\nimport java.io.IOException;\r\nimport java.time.Duration;\r\nimport java.util.ArrayList;\r\nimport java.util.Iterator;\r\nimport java.util.LinkedHashSet;\r\nimport java.util.LinkedList;\r\nimport java.util.List;\r\nimport java.util.Queue;\r\nimport java.util.regex.Matcher;\r\nimport java.util.regex.Pattern;\r\n\r\nimport org.openqa.selenium.By;\r\nimport org.openqa.selenium.JavascriptExecutor;\r\nimport org.openqa.selenium.WebDriver;\r\nimport org.openqa.selenium.WebElement;\r\nimport org.openqa.selenium.edge.EdgeDriver;\r\nimport org.openqa.selenium.support.ui.ExpectedConditions;\r\nimport org.openqa.selenium.support.ui.WebDriverWait;\r\n\r\npublic class DealFinder {\r\n\r\n  private Utilities utl = new Utilities();\r\n\r\n  public void webScrapper(String cityName) {\r\n\r\n    System.setProperty(\"webdriver.edge.driver\", \"/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/WebDriver/msedgedriver\");\r\n    WebDriver edgeWebDriver = new EdgeDriver();\r\n\r\n    //minimized edge browser is being enlarged\r\n    edgeWebDriver.manage().window().maximize();\r\n\r\n    //Implicit Wait is implemented to avoid getting captcha from website\r\n    edgeWebDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(60));\r\n\r\n    JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;\r\n\r\n    edgeWebDriver.get(\"https://www.fitnessworld.ca/explore-memberships/\");     \r\n\r\n    String userInput = cityName;\r\n\r\n    WebDriverWait wait = new WebDriverWait(edgeWebDriver,Duration.ofSeconds(50) );\r\n\r\n    // Specify the locator strategy (e.g., by ID, by XPath, etc.) for the element you're waiting for\r\n    By elementLocator = By.className(\"close-popup\");\r\n\r\n    try {\r\n        // Wait until the element is present on the page\r\n        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(elementLocator));\r\n        \r\n        By closeButtonAvailability = By.className(\"close-popup\");\r\n        //Email Signup popup is being selected\r\n\r\n        if (isElementPresent(edgeWebDriver, closeButtonAvailability)) {\r\n          //condition checks whether the button is present on screen or not\r\n          WebElement closeButton = edgeWebDriver.findElement(By.className(\"close-popup\"));\r\n          //if button is present on screen than it clicked and pop is closed\r\n          closeButton.click();\r\n          System.out.println(\"Email Signup popup Cancelled clicked successfully!\");\r\n        }\r\n    } \r\n    catch (Exception e) {  \r\n        System.out.println(\"Element not found within the specified time.\");\r\n    }  \r\n\r\n    WebElement parentElement = edgeWebDriver.findElement(By.className(\"club-container\"));;\r\n\r\n    // Scroll to the specific element\r\n    js.executeScript(\"arguments[0].scrollIntoView(true);\", parentElement);\r\n\r\n    //List < WebElement > maincontainers = edgeWebDriver.findElements(By.className(\"club-option__benefits\"));\r\n    List<WebElement> maincontainers = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className(\"club-option__benefits\")));\r\n\r\n    String ftcsvFilePath = \"ftoutput.csv\";\r\n\r\n    try (FileWriter ftcsvWriter = new FileWriter(ftcsvFilePath)) {\r\n      ftcsvWriter.write(\"Fitness World\"+\"\\n\");\r\n      for (WebElement childEle: maincontainers) {\r\n\r\n        String text = childEle.findElement(By.tagName(\"h3\")).getText().trim();\r\n        text=text.replaceAll(\"BI-WEEKLY\", \"Per month\");\r\n  \t\ttext=text.replaceAll(\"$\", \"\");\r\n        ftcsvWriter.write(text);\r\n\r\n        List < WebElement > texts = childEle.findElements(By.tagName(\"span\"));\r\n        for (WebElement insidetext: texts) {\r\n          //System.out.println(insidetext.getText());\r\n          ftcsvWriter.write(System.getProperty(\"line.separator\") + insidetext.getText().trim());\r\n\r\n        }\r\n        ftcsvWriter.append(\"\\n\");\r\n        ftcsvWriter.write(System.getProperty(\"line.separator\"));\r\n      }\r\n\r\n      WebElement searchElement = edgeWebDriver.findElement(By.id(\"address\"));;\r\n      // Scroll to the specific element\r\n      js.executeScript(\"arguments[0].scrollIntoView(true);\", searchElement);\r\n      //String input=\"vancouver\";\r\n      searchElement.sendKeys(userInput);\r\n\r\n      WebElement FtLocationContainer = edgeWebDriver.findElement(By.className(\"join__locations\"));\r\n      List < WebElement > Fit4LessLocations = FtLocationContainer.findElements(By.tagName(\"a\"));\r\n\r\n      Queue < String > ftLinkstoVisit = new LinkedList < > ();\r\n      int linksCount = 0;\r\n      for (WebElement ele: Fit4LessLocations) {\r\n        String link = ele.getAttribute(\"href\");\r\n        if (linksCount < 3) {\r\n          ftLinkstoVisit.add(link);\r\n          linksCount++;\r\n        }\r\n      }\r\n      while (!ftLinkstoVisit.isEmpty()) {\r\n        edgeWebDriver.get(ftLinkstoVisit.poll());\r\n        WebElement fttitle = edgeWebDriver.findElement(By.className(\"title\"));\r\n        WebElement ftAddress = edgeWebDriver.findElement(By.className(\"address\"));\r\n        WebElement ftphone = edgeWebDriver.findElement(By.className(\"phone\"));\r\n        ftcsvWriter.write(fttitle.getText() + \",\");\r\n        ftcsvWriter.write(ftAddress.getText() + \",\");\r\n        ftcsvWriter.write(ftphone.getText());\r\n        ftcsvWriter.write(System.getProperty(\"line.separator\"));\r\n        //System.out.println(fttitle.getText()+\" \"+ftAddress.getText()+\" \"+ftphone.getText());\r\n        //edgeWebDriver.navigate().back();\r\n      }\r\n    } catch (IOException e) {\r\n      e.printStackTrace();\r\n    }\r\n\r\n    edgeWebDriver.get(\"https://www.goodlifefitness.com/membership.html\");\r\n\r\n    WebElement performanceLabel = edgeWebDriver.findElement(By.cssSelector(\"label[for='performance-membership']\"));\r\n\r\n    js.executeScript(\"arguments[0].scrollIntoView(true);\", performanceLabel);\r\n\r\n    WebElement ultimateLabel = edgeWebDriver.findElement(By.cssSelector(\"label[for='ultimate-membership']\"));\r\n    WebElement premiumLabel = edgeWebDriver.findElement(By.cssSelector(\"label[for='all-clubs-membership']\"));\r\n\r\n    WebElement GLMainContainer = edgeWebDriver.findElement(By.className(\"c-membership-types-container\"));\r\n    List < WebElement > prices = GLMainContainer.findElements(By.className(\"c-card--membership-price__dollar\"));\r\n    //List<WebElement> features=edgeWebDriver.findElements(By.className(\"c-list--checkmark__item\"));\r\n\r\n    List < WebElement > features = edgeWebDriver.findElements(By.cssSelector(\"tr.c-pricing-mobile__row\"));\r\n\r\n    String GLcsvFilePath = \"GLoutput.csv\";\r\n\r\n    try (FileWriter GLcsvWriter = new FileWriter(GLcsvFilePath)) {\r\n      //GLcsvWriter.append(\"GoodLife Fitness\" + \"\\n\");\r\n      GLcsvWriter.append(premiumLabel.getText() + \",\" + ultimateLabel.getText() + \",\" + performanceLabel.getText() + \"\\n\");\r\n\r\n      StringBuilder rowString = new StringBuilder();\r\n      for (WebElement price: prices) {\r\n        if (!price.getText().trim().isEmpty())\r\n          try {\r\n            float result = convertStringToInt(price.getText() + \".99\");\r\n            rowString.append(result + \" /per month\" + \",\");\r\n            //        \t            System.out.println(\"Converted integer: \" + result);\r\n          } catch (NumberFormatException e) {\r\n            System.err.println(\"Error: Unable to convert the string to an integer.\");\r\n          }\r\n      }\r\n      GLcsvWriter.append(rowString.toString().replaceAll(\",$\", \"\")).append(\"\\n\");\r\n\r\n      LinkedHashSet < String > unhighlightedList1 = new LinkedHashSet < > ();\r\n      LinkedHashSet < String > HighlightedList = new LinkedHashSet < > ();\r\n      LinkedHashSet < String > unhighlightedList2 = new LinkedHashSet < > ();\r\n      for (WebElement eb: features) {\r\n        List < WebElement > unhighlightedcell = eb.findElements(By.cssSelector(\"td.c-pricing-mobile__available\"));\r\n        WebElement highlightedcell = eb.findElement(By.cssSelector(\"td.col.c-pricing-mobile__available.highlight\"));\r\n        //System.out.println(unhighlightedcell.size()+\",\");\r\n\r\n        List < WebElement > unhighlighted1 = unhighlightedcell.get(4).findElements(By.tagName(\"li\"));\r\n        for (WebElement cellun: unhighlighted1) {\r\n          if (!cellun.getText().trim().isEmpty()) {\r\n            //System.out.print(\"inside\"+cellun.getText()+\"\\n\");\r\n            unhighlightedList1.add(cellun.getText());\r\n          }\r\n        }\r\n\r\n        List < WebElement > unhighlighted2 = unhighlightedcell.get(6).findElements(By.tagName(\"li\"));\r\n        for (WebElement cellun: unhighlighted2) {\r\n          if (!cellun.getText().trim().isEmpty()) {\r\n            unhighlightedList2.add(cellun.getText());\r\n          }\r\n        }\r\n\r\n        List < WebElement > highlighted = highlightedcell.findElements(By.tagName(\"li\"));\r\n        for (WebElement cellun: highlighted) {\r\n          if (!cellun.getText().trim().isEmpty()) {\r\n            HighlightedList.add(cellun.getText());\r\n          }\r\n        }\r\n      }\r\n\r\n      // Create iterators for each set\r\n      Iterator < String > iterator1 = unhighlightedList1.iterator();\r\n      Iterator < String > iterator2 = HighlightedList.iterator();\r\n      Iterator < String > iterator3 = unhighlightedList2.iterator();\r\n      while (iterator1.hasNext() || iterator2.hasNext() || iterator3.hasNext()) {\r\n        // Write elements to the CSV file, using an empty string if the set is exhausted\r\n        GLcsvWriter.append(iterator1.hasNext() ? iterator1.next() : \"\").append(\",\");\r\n        GLcsvWriter.append(iterator2.hasNext() ? iterator2.next() : \"\").append(\",\");\r\n        GLcsvWriter.append(iterator3.hasNext() ? iterator3.next() : \"\").append(\",\");\r\n        GLcsvWriter.append(\"\\n\");\r\n      }\r\n      edgeWebDriver.get(\"https://www.goodlifefitness.com/clubs.html\");\r\n      WebElement LocationSearchInput = edgeWebDriver.findElement(By.id(\"club-search\"));\r\n      LocationSearchInput.sendKeys(userInput);\r\n\r\n      try {\r\n        // Sleep for 3 seconds (3000 milliseconds)\r\n        Thread.sleep(10000);\r\n      } catch (InterruptedException e) {\r\n        // Handle the exception if necessary\r\n        e.printStackTrace();\r\n      }\r\n\r\n      WebElement LocationSearchButton = edgeWebDriver.findElement(By.className(\"c-search__button\"));\r\n      LocationSearchButton.findElement(By.tagName(\"button\")).click();\r\n\r\n      By GLLocationAvailability = By.id(\"js-card-list__0\");\r\n      //Email Signup popup is being selected\r\n\r\n      if (isElementPresent(edgeWebDriver, GLLocationAvailability)) {\r\n        try {\r\n          // Sleep for 3 seconds (3000 milliseconds)\r\n          Thread.sleep(10000);\r\n        } catch (InterruptedException e) {\r\n          // Handle the exception if necessary\r\n          e.printStackTrace();\r\n        }\r\n        //condition checks whether the button is present on screen or not\r\n        WebElement GLLocation1 = edgeWebDriver.findElement(By.id(\"js-card-list__0\"));\r\n        WebElement GLLocation2 = edgeWebDriver.findElement(By.id(\"js-card-list__1\"));\r\n        WebElement GLLocation3 = edgeWebDriver.findElement(By.id(\"js-card-list__2\"));\r\n\r\n        String Title1 = GLLocation1.findElement(By.cssSelector(\"h3.c-card__title\")).getText();\r\n        String Title2 = GLLocation2.findElement(By.cssSelector(\"h3.c-card__title\")).getText();\r\n        String Title3 = GLLocation3.findElement(By.cssSelector(\"h3.c-card__title\")).getText();\r\n\r\n        String Address1 = GLLocation1.findElement(By.className(\"c-card__contact\")).getText();\r\n        String Address2 = GLLocation2.findElement(By.className(\"c-card__contact\")).getText();\r\n        String Address3 = GLLocation3.findElement(By.className(\"c-card__contact\")).getText();\r\n\r\n        String Phone1 = GLLocation1.findElement(By.className(\"c-card__phone\")).getText();\r\n        String Phone2 = GLLocation2.findElement(By.className(\"c-card__phone\")).getText();\r\n        String Phone3 = GLLocation3.findElement(By.className(\"c-card__phone\")).getText();\r\n\r\n        Pattern pattern = Pattern.compile(\"(.+?)\\\\n\");\r\n        Matcher matcher1 = pattern.matcher(Address1);\r\n\r\n        if (matcher1.find()) {\r\n          Address1 = matcher1.group(1);\r\n        } else {\r\n          System.out.println(\"Pattern not found in the input string.\");\r\n        }\r\n\r\n        Matcher matcher2 = pattern.matcher(Address2);\r\n        if (matcher2.find()) {\r\n          Address2 = matcher2.group(1);\r\n        } else {\r\n          System.out.println(\"Pattern not found in the input string.\");\r\n        }\r\n\r\n        Matcher matcher3 = pattern.matcher(Address3);\r\n        if (matcher3.find()) {\r\n          Address3 = matcher3.group(1);\r\n        } else {\r\n          System.out.println(\"Pattern not found in the input string.\");\r\n        }\r\n\r\n        GLcsvWriter.append(Title1 + \",\" + Address1 + \",\" + Phone1.trim() + \"\\n\");\r\n        GLcsvWriter.append(Title2 + \",\" + Address2 + \",\" + Phone2.trim() + \"\\n\");\r\n        GLcsvWriter.append(Title3 + \",\" + Address3 + \",\" + Phone3.trim() + \"\\n\");\r\n\r\n      }\r\n    } catch (IOException e) {\r\n      e.printStackTrace();\r\n    }\r\n\r\n    //website is being fetched\r\n    edgeWebDriver.get(\"https://www.planetfitness.ca/\");\r\n\r\n    String Price1 = edgeWebDriver.findElement(By.xpath(\"//*[@id=\\\"__next\\\"]/div/div/div[2]/div[2]/div/div[2]/div[1]/div/div/div[1]/div[3]/p[1]\")).getText();\r\n    String Price2 = edgeWebDriver.findElement(By.xpath(\"//*[@id=\\\"__next\\\"]/div/div/div[2]/div[2]/div/div[2]/div[2]/div/div/div[1]/div[3]/p[1]\")).getText();\r\n\r\n    WebElement inputElement = edgeWebDriver.findElement(By.xpath(\"//*[@id=\\\":R1lb5lel6:\\\"]\"));\r\n  //  WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(\"//*[@id=':R1lb5lel6:']\")));\r\n    inputElement.sendKeys(userInput);\r\n\r\n    WebElement joinUsButton = edgeWebDriver.findElement(By.className(\"MuiButton-containedSecondary\"));\r\n\r\n    // Click the \"Join Us\" button\r\n    joinUsButton.click();\r\n\r\n    Queue < String > LinkstoVisit = new LinkedList < > ();\r\n    WebElement mainDiv = edgeWebDriver.findElement(By.xpath(\"/html/body/div[2]/div[2]/div/div\"));\r\n\r\n    // Find all elements inside the main div\r\n    List < WebElement > elementsInsideDiv = mainDiv.findElements(By.cssSelector(\"*\"));\r\n    ArrayList < String > tabs = new ArrayList < > (edgeWebDriver.getWindowHandles());\r\n    //System.out.println(edgeWebDriver.getWindowHandles());\r\n    // Print the text of each element inside the main div\r\n    int count = 0;\r\n    for (WebElement element: elementsInsideDiv) {\r\n      if (\"a\".equals(element.getTagName())) {\r\n        // Print the link text\r\n        //System.out.println(\"Link Text: \" + element.getText());\r\n\r\n        // Get the href attribute value (link URL)\r\n        String linkUrl = element.getAttribute(\"href\");\r\n        //System.out.println(\"Link URL: \" + linkUrl);\r\n\r\n        // Check if the link opens in a new tab\r\n        if (element.getText().equals(\"Club Details\") && count < 3) {\r\n          //System.out.println(linkUrl);\r\n          LinkstoVisit.add(linkUrl);\r\n          count++;\r\n        }\r\n      }\r\n\r\n    }\r\n\r\n    WebElement membershipsLink = edgeWebDriver.findElement(By.cssSelector(\"a[href='/gym-memberships']\"));\r\n\r\n    // Click the element\r\n    membershipsLink.click();\r\n\r\n    WebElement table = edgeWebDriver.findElement(By.cssSelector(\"table.MuiTable-root\"));\r\n    List < WebElement > rows = table.findElements(By.cssSelector(\"tbody tr\"));\r\n    String csvFilePath = \"output.csv\";\r\n\r\n    try (FileWriter csvWriter = new FileWriter(csvFilePath)) {\r\n      // Write header\r\n      csvWriter.append(\"Explore our Membership options,PF Black Card,Classic\\n\");\r\n      double originalAmount1 = extractAmount(Price1);\r\n      double originalAmount2 = extractAmount(Price2);\r\n\r\n      double conversionRate = 1.41;\r\n\r\n      double cadAmount1 = originalAmount1 * conversionRate;\r\n      double cadAmount2 = originalAmount2 * conversionRate;\r\n\r\n       Price1 = String.format(\"%.2f\", cadAmount1) + \" /month\";\r\n       Price2 = String.format(\"%.2f\", cadAmount2) + \" /month\";\r\n      csvWriter.append(\",\" + Price1 + \",\" + Price2 + \"\\n\");\r\n\r\n      for (WebElement row: rows) {\r\n        List < WebElement > columns = row.findElements(By.cssSelector(\"td\"));\r\n        StringBuilder rowString = new StringBuilder();\r\n\r\n        for (WebElement column: columns) {\r\n          String cellText = column.getText().trim();\r\n          List < WebElement > paths = column.findElements(By.cssSelector(\"svg path\"));\r\n\r\n          if (!cellText.isEmpty()) {\r\n            // If text exists, include the text in CSV\r\n            rowString.append(cellText).append(\",\");\r\n          } else if (!paths.isEmpty()) {\r\n            // If path exists and text doesn't, put \"yes\" in CSV\r\n            rowString.append(\"yes,\");\r\n          } else {\r\n            // If both text and path don't exist, put \"no\" in CSV\r\n            rowString.append(\"no,\");\r\n          }\r\n        }\r\n\r\n        csvWriter.append(rowString.toString().replaceAll(\",$\", \"\")).append(\"\\n\");\r\n\r\n      }\r\n      while (!LinkstoVisit.isEmpty()) {\r\n        edgeWebDriver.get(LinkstoVisit.poll());\r\n        WebElement clubname = edgeWebDriver.findElement(By.xpath(\"//*[@id=\\\"main-content\\\"]/div[1]/div[1]/h1\"));\r\n        WebElement clubaddress = edgeWebDriver.findElement(By.xpath(\"//*[@id=\\\"main-content\\\"]/div[1]/div[2]/p[1]\"));\r\n        WebElement clubphone = edgeWebDriver.findElement(By.xpath(\"//*[@id=\\\"main-content\\\"]/div[1]/div[2]/div[2]/a\"));\r\n        csvWriter.append(clubname.getText().replaceAll(\",\",\" \") + \",\" + clubaddress.getText().replaceAll(\",\",\" \") + \",\" + clubphone.getText() + \"\\n\");\r\n        //edgeWebDriver.navigate().back();\r\n      }\r\n      System.out.println(\"CSV file has been created successfully.\");\r\n\r\n    } catch (IOException e) {\r\n      //e.printStackTrace();\r\n    }\r\n\r\n    edgeWebDriver.quit();\r\n\r\n  }\r\n\r\n  public float convertStringToInt(String input) throws NumberFormatException {\r\n    // The Integer.parseInt() method can throw NumberFormatException\r\n    return Float.parseFloat(input) * 2;\r\n  }\r\n\r\n  private boolean isElementPresent(WebDriver driver, By by) {\r\n    try {\r\n      driver.findElement(by);\r\n      //checks whether element is present on page.\r\n      return true;\r\n    } catch (org.openqa.selenium.NoSuchElementException e) {\r\n      return false;\r\n    }\r\n  }\r\n  \r\n  private static double extractAmount(String inputString) {\r\n      // Remove non-numeric characters from the string\r\n      String numericString = inputString.replaceAll(\"[^0-9.]\", \"\");\r\n\r\n      // Parse the numeric string to a double value\r\n      return Double.parseDouble(numericString);\r\n  }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/org/fitness/utilities/DealFinder.java b/src/main/java/org/fitness/utilities/DealFinder.java
+--- a/src/main/java/org/fitness/utilities/DealFinder.java	(revision 6a91f45bd9bec4b50c3ee47c212417f1c9d57a11)
++++ b/src/main/java/org/fitness/utilities/DealFinder.java	(date 1711045778680)
+@@ -1,17 +1,5 @@
+ package org.fitness.utilities;
+ 
+-import java.io.FileWriter;
+-import java.io.IOException;
+-import java.time.Duration;
+-import java.util.ArrayList;
+-import java.util.Iterator;
+-import java.util.LinkedHashSet;
+-import java.util.LinkedList;
+-import java.util.List;
+-import java.util.Queue;
+-import java.util.regex.Matcher;
+-import java.util.regex.Pattern;
+-
+ import org.openqa.selenium.By;
+ import org.openqa.selenium.JavascriptExecutor;
+ import org.openqa.selenium.WebDriver;
+@@ -20,13 +8,20 @@
+ import org.openqa.selenium.support.ui.ExpectedConditions;
+ import org.openqa.selenium.support.ui.WebDriverWait;
+ 
++import java.io.FileWriter;
++import java.io.IOException;
++import java.time.Duration;
++import java.util.*;
++import java.util.regex.Matcher;
++import java.util.regex.Pattern;
++
+ public class DealFinder {
+ 
+   private Utilities utl = new Utilities();
+ 
+   public void webScrapper(String cityName) {
+ 
+-    System.setProperty("webdriver.edge.driver", "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/WebDriver/msedgedriver");
++    System.setProperty("webdriver.edge.driver", "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/WebDriver/msedgedriver");
+     WebDriver edgeWebDriver = new EdgeDriver();
+ 
+     //minimized edge browser is being enlarged
+Index: src/main/java/org/fitness/utilities/DealFinderAPIs.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.fitness.utilities;\n\nimport com.fasterxml.jackson.databind.ObjectMapper;\nimport com.google.gson.Gson;\nimport com.google.gson.GsonBuilder;\nimport com.mongodb.client.MongoClients;\nimport org.fitness.classes.FitnessWorldMembership;\nimport org.fitness.classes.GoodLifeMembership;\nimport org.fitness.classes.PlanetFitnessMembership;\nimport org.openqa.selenium.By;\nimport org.openqa.selenium.JavascriptExecutor;\nimport org.openqa.selenium.WebDriver;\nimport org.openqa.selenium.WebElement;\nimport org.openqa.selenium.edge.EdgeDriver;\nimport org.openqa.selenium.support.ui.ExpectedConditions;\nimport org.openqa.selenium.support.ui.WebDriverWait;\nimport org.springframework.data.mongodb.core.MongoOperations;\nimport org.springframework.data.mongodb.core.MongoTemplate;\n\nimport java.time.Duration;\nimport java.util.ArrayList;\nimport java.util.LinkedHashMap;\nimport java.util.List;\nimport java.util.Map;\n\npublic class DealFinderAPIs {\n    private static final String CHROME_DRIVER_PATH = \"/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/WebDriver/msedgedriver\";\n    private static final String FITNESS_WORLD_URL = \"https://www.fitnessworld.ca/explore-memberships/\";\n    private static final String GOODLIFE_FITNESS_URL = \"https://www.goodlifefitness.com/membership.html\";\n    private static final String PLATNET_FITNESS_URL = \"https://www.planetfitness.ca/\";\n    MongoOperations mongoOps = new MongoTemplate(MongoClients.create(), \"ACC_PROJECT\");\n\n    public String  webScraperForFT(String cityName) {\n        System.setProperty(\"webdriver.edge.driver\", CHROME_DRIVER_PATH);\n        WebDriver edgeWebDriver = new EdgeDriver();\n        JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;\n\n        edgeWebDriver.manage().window().maximize();\n        edgeWebDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(60));\n\n        edgeWebDriver.get(FITNESS_WORLD_URL);\n\n        WebDriverWait wait = new WebDriverWait(edgeWebDriver, Duration.ofSeconds(60));\n\n        By elementLocator = By.className(\"close-popup\");\n\n        try {\n            // Wait until the element is present on the page\n            WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(elementLocator));\n\n            By closeButtonAvailability = By.className(\"close-popup\");\n            //Email Signup popup is being selected\n\n            if (isElementPresent(edgeWebDriver, closeButtonAvailability)) {\n                //condition checks whether the button is present on screen or not\n                WebElement closeButton = edgeWebDriver.findElement(By.className(\"close-popup\"));\n                //if button is present on screen than it clicked and pop is closed\n                closeButton.click();\n                System.out.println(\"Email Signup popup Cancelled clicked successfully!\");\n            }\n        }\n        catch (Exception e) {\n            System.out.println(\"Element not found within the specified time.\");\n        }\ntry{\n        WebElement parentElement = edgeWebDriver.findElement(By.className(\"club-container\"));;\n\n        // Scroll to the specific element\n        js.executeScript(\"arguments[0].scrollIntoView(true);\", parentElement);\n\n        //List < WebElement > maincontainers = edgeWebDriver.findElements(By.className(\"club-option__benefits\"));\n        List<WebElement> maincontainers = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className(\"club-option__benefits\")));\n        List<FitnessWorldMembership> memberships = new ArrayList<>();\n\n            for (WebElement childEle : maincontainers) {\n                String title = childEle.findElement(By.tagName(\"h3\")).getText().trim().replaceAll(\"BI-WEEKLY\", \"Per month\").replaceAll(\"$\", \"\");\n                List<WebElement> texts = childEle.findElements(By.tagName(\"span\"));\n                List<String> benefits = new ArrayList<>();\n                for (WebElement insideText : texts) {\n                    benefits.add(insideText.getText().trim());\n                }\n                String[] parts = title.split(\"\\\\$\");\n\n                String membershipType = parts[0].trim();\n                String price = \"$\" + parts[1].trim();\n                FitnessWorldMembership obj = new FitnessWorldMembership(membershipType,\"Fitness World\",price, benefits);\n                mongoOps.save(obj,\"plans\");\n                memberships.add(new FitnessWorldMembership(membershipType,\"Fitness World\",price, benefits));\n            }\n\n            Gson gson = new GsonBuilder().setPrettyPrinting().create();\n\n            String json = gson.toJson(memberships);\n\n            edgeWebDriver.quit();\n\n            return json;\n        } catch (Exception e) {\n            System.out.println(\"Error occurred while scraping Fitness World website:\");\n            e.printStackTrace();\n            edgeWebDriver.quit();\n            return null;\n        }\n    }\n\n    public String webScraperForGL(String location) {\n            System.setProperty(\"webdriver.edge.driver\", CHROME_DRIVER_PATH);\n            WebDriver edgeWebDriver = new EdgeDriver();\n            JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;\n\n            edgeWebDriver.manage().window().maximize();\n            edgeWebDriver.get(GOODLIFE_FITNESS_URL);\n            WebDriverWait wait = new WebDriverWait(edgeWebDriver, Duration.ofSeconds(50));\n            try {\n                WebElement performanceLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(\"label[for='performance-membership']\")));\n                WebElement ultimateLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(\"label[for='ultimate-membership']\")));\n                WebElement premiumLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(\"label[for='all-clubs-membership']\")));\n\n                js.executeScript(\"arguments[0].scrollIntoView(true);\", performanceLabel);\n\n                WebElement GLMainContainer = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(\"c-membership-types-container\")));\n                List<WebElement> prices = GLMainContainer.findElements(By.className(\"c-card--membership-price__dollar\"));\n                List<WebElement> features = edgeWebDriver.findElements(By.cssSelector(\"tr.c-pricing-mobile__row\"));\n\n                // Create a map to hold the membership types\n                Map<String, Object> glData = new LinkedHashMap<>();\n                List<Map<String, Object>> membershipTypes = new ArrayList<>();\n                Map<String, Object> glData_Premium = new LinkedHashMap<>();\n                glData_Premium.put(\"membershipType\", premiumLabel.getText());\n                Map<String, Object> glData_Ultimate = new LinkedHashMap<>();\n                glData_Ultimate.put(\"membershipType\", ultimateLabel.getText());\n                Map<String, Object> glData_Performance = new LinkedHashMap<>();\n                glData_Performance.put(\"membershipType\", performanceLabel.getText());\n                List<String> premiumFeatures = new ArrayList<>();\n                List<String> ultimateFeatures = new ArrayList<>();\n                List<String> performanceFeature = new ArrayList<>();\n\n                for (WebElement feature : features) {\n                    List<WebElement> unhighlightedCells = feature.findElements(By.cssSelector(\"td.c-pricing-mobile__available\"));\n                    WebElement highlightedCell = feature.findElement(By.cssSelector(\"td.col.c-pricing-mobile__available.highlight\"));\n\n                    Map<String, Object> membershipType = new LinkedHashMap<>();\n\n                    // Extract unhighlighted features from the respective cells\n                    for (WebElement cell : unhighlightedCells.get(4).findElements(By.tagName(\"li\"))) {\n                        String text = cell.getText().trim();\n                        if (!text.isEmpty()) {\n                            premiumFeatures.add(text);\n                        }\n                    }\n\n                    for (WebElement cell : unhighlightedCells.get(6).findElements(By.tagName(\"li\"))) {\n                        String text = cell.getText().trim();\n                        if (!text.isEmpty()) {\n                            ultimateFeatures.add(text);\n                        }\n                    }\n\n                    // Extract highlighted features from the highlighted cell\n                    for (WebElement cell : highlightedCell.findElements(By.tagName(\"li\"))) {\n                        String text = cell.getText().trim();\n                        if (!text.isEmpty()) {\n                            performanceFeature.add(text);\n                        }\n                    }\n                }\n                glData_Premium.put(\"gymName\", \"GOODLIFE_FITNESS\");\n                glData_Ultimate.put(\"gymName\", \"GOODLIFE_FITNESS\");\n                glData_Performance.put(\"gymName\", \"GOODLIFE_FITNESS\");\n                glData_Premium.put(\"features\", premiumFeatures);\n                glData_Ultimate.put(\"features\", ultimateFeatures);\n                glData_Performance.put(\"features\", performanceFeature);\n                List<Integer> priceList = getPrices(prices);\n                glData_Premium.put(\"price\", \"$\"+priceList.get(0)+\"/month\");\n                glData_Ultimate.put(\"price\",\"$\"+priceList.get(1)+\"/month\");\n                glData_Performance.put(\"price\", \"$\"+priceList.get(2)+\"/month\");\n\n                ObjectMapper objectMapper = new ObjectMapper();\n                GoodLifeMembership gl1=objectMapper.convertValue(glData_Premium, GoodLifeMembership.class);\n                mongoOps.save(gl1,\"plans\");\n                GoodLifeMembership gl2=objectMapper.convertValue(glData_Ultimate, GoodLifeMembership.class);\n                mongoOps.save(gl2,\"plans\");\n                GoodLifeMembership gl3=objectMapper.convertValue(glData_Performance, GoodLifeMembership.class);\n                mongoOps.save(gl3,\"plans\");\n                membershipTypes.add(glData_Premium);\n                membershipTypes.add(glData_Ultimate);\n                membershipTypes.add(glData_Performance);\n\n                // Convert the map to JSON using Gson\n                Gson gson = new GsonBuilder().setPrettyPrinting().create();\n                String json = gson.toJson(membershipTypes);\n\n                edgeWebDriver.quit(); // Quit the WebDriver\n\n                return json; // Return the JSON string\n            } catch (Exception e) {\n                e.printStackTrace();\n                edgeWebDriver.quit();\n                return null;\n            }\n\n\n    }\n\n\n    public String webScraperForPF(String location) {\n        System.setProperty(\"webdriver.edge.driver\", CHROME_DRIVER_PATH);\n        WebDriver edgeWebDriver = new EdgeDriver();\n        JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;\n\n        edgeWebDriver.manage().window().maximize();\n        edgeWebDriver.get(PLATNET_FITNESS_URL);\n        WebDriverWait wait = new WebDriverWait(edgeWebDriver, Duration.ofSeconds(50));\n        try{\n            WebElement inputElement = edgeWebDriver.findElement(By.xpath(\"/html/body/div[3]/div/div/div[1]/div[4]/div/form/div/div/div/input\"));\n            inputElement.sendKeys(location);\n            WebElement joinUsButton = edgeWebDriver.findElement(By.xpath(\"/html/body/div[3]/div/div/div[1]/div[4]/div/form/div/button\"));\n            // Click the \"Join Us\" button\n            joinUsButton.click();\n\n            List<WebElement> placeElements = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath(\"/html/body/div[2]/div[2]\")));\n            List<Map> places = new ArrayList<>();\n            String locationName;\n            for (WebElement placeElement : placeElements) {\n                // Extract information for each place\n                locationName = placeElement.findElement(By.cssSelector(\"b.text-lg.tracking-\\\\[\\\\-0\\\\.015em\\\\].text-common-black\")).getText();\n                String detailsLink = placeElement.findElement(By.cssSelector(\"a[href*='/offers']\")).getAttribute(\"href\");\n                // Navigate to the URL specified in the href attribute\n                edgeWebDriver.get(detailsLink);\n                break;\n            };\n            List<WebElement> featuresButtons = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath(\"/html/body/div[1]/div[6]/div/div/div/div/div/div[2]/div/div[6]/button\")));\n\n// Iterate over each element and click it\n            for (WebElement button : featuresButtons) {\n                button.click();\n            }\n            //After getting to membership details page\n            String membershipType1 = edgeWebDriver.findElement(By.xpath(\"/html/body/div[1]/div[6]/div/div/div[1]/div/div/div[2]/div/div[1]/p/span\")).getText();\n            String membershipType2 = edgeWebDriver.findElement(By.xpath(\"/html/body/div[1]/div[6]/div/div/div[2]/div/div/div[2]/div/div[1]/p/span\")).getText();\n            String price1 =  edgeWebDriver.findElement(By.xpath(\"/html/body/div[1]/div[6]/div/div/div[1]/div/div/div[2]/div/p[1]\")).getText();\n            String price2 = edgeWebDriver.findElement(By.xpath(\"/html/body/div[1]/div[6]/div/div/div[2]/div/div/div[2]/div/p[1]\")).getText();\n            String features1= edgeWebDriver.findElement(By.xpath(\"/html/body/div[1]/div[6]/div/div/div[1]/div/div/div[2]/div/div[4]/ul\")).getText();\n            String[] features1List = features1.split(\"\\\\n\");\n            String features2= edgeWebDriver.findElement(By.xpath(\"/html/body/div[1]/div[6]/div/div/div[2]/div/div/div[2]/div/div[4]/ul\")).getText();\n            String[] features2List = features2.split(\"\\\\n\");\n            PlanetFitnessMembership plmembershipType1 = new PlanetFitnessMembership(membershipType1, features1List, price1);\n            PlanetFitnessMembership plmembershipType2 = new PlanetFitnessMembership(membershipType2, features2List, price2);\n            List<PlanetFitnessMembership> membershipList = new ArrayList<>();\n            mongoOps.save(plmembershipType1,\"plans\");\n            mongoOps.save(plmembershipType2,\"plans\");\n            membershipList.add(plmembershipType1);\n            membershipList.add(plmembershipType2);\n            Gson gson = new Gson();\n            String json = gson.toJson(membershipList);\n            //mongoOps.save(json);\n            return json;\n        }\n        catch(Exception e){\n            System.out.println(e);\n        }\n\n       // edgeWebDriver.quit(); // Quit the WebDriver\n   return \"Something went wrong\";\n    }\n\n    private List<Integer> getPrices(List<WebElement> prices) {\n        List<Integer> priceList = new ArrayList<>();\n        for (WebElement price : prices) {\n            String priceText = price.getText().trim();\n            if (!priceText.isEmpty()) {\n                try {\n                    int priceValue = Integer.parseInt(priceText);\n                    priceList.add(priceValue);\n                } catch (NumberFormatException e) {\n                    e.printStackTrace();\n                    // Handle the exception, maybe log it or skip this price\n                }\n            }\n        }\n        return priceList;\n    }\n\n\n    private boolean isElementPresent(WebDriver driver, By by) {\n        try {\n            driver.findElement(by);\n            //checks whether element is present on page.\n            return true;\n        } catch (org.openqa.selenium.NoSuchElementException e) {\n            return false;\n        }\n    }\n\n\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/org/fitness/utilities/DealFinderAPIs.java b/src/main/java/org/fitness/utilities/DealFinderAPIs.java
+--- a/src/main/java/org/fitness/utilities/DealFinderAPIs.java	(revision 6a91f45bd9bec4b50c3ee47c212417f1c9d57a11)
++++ b/src/main/java/org/fitness/utilities/DealFinderAPIs.java	(date 1711070015600)
+@@ -11,6 +11,8 @@
+ import org.openqa.selenium.JavascriptExecutor;
+ import org.openqa.selenium.WebDriver;
+ import org.openqa.selenium.WebElement;
++import org.openqa.selenium.chrome.ChromeDriver;
++import org.openqa.selenium.chrome.ChromeOptions;
+ import org.openqa.selenium.edge.EdgeDriver;
+ import org.openqa.selenium.support.ui.ExpectedConditions;
+ import org.openqa.selenium.support.ui.WebDriverWait;
+@@ -24,23 +26,35 @@
+ import java.util.Map;
+ 
+ public class DealFinderAPIs {
+-    private static final String CHROME_DRIVER_PATH = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/WebDriver/msedgedriver";
++    private static final String CHROME_DRIVER_PATH = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/WebDriver/msedgedriver";
+     private static final String FITNESS_WORLD_URL = "https://www.fitnessworld.ca/explore-memberships/";
+     private static final String GOODLIFE_FITNESS_URL = "https://www.goodlifefitness.com/membership.html";
+     private static final String PLATNET_FITNESS_URL = "https://www.planetfitness.ca/";
+     MongoOperations mongoOps = new MongoTemplate(MongoClients.create(), "ACC_PROJECT");
+ 
+     public String  webScraperForFT(String cityName) {
+-        System.setProperty("webdriver.edge.driver", CHROME_DRIVER_PATH);
+-        WebDriver edgeWebDriver = new EdgeDriver();
+-        JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
++        System.setProperty("webdriver.chrome.driver", "/Users/rohansethi/Downloads/Assignment_3/chromedriver");
++
++//        EdgeOptions options = new EdgeOptions();
++//
++//
++//
++//        options.addArguments("--headless");
++
++//        WebDriver chromeWebDriver = new EdgeDriver(options);
++        ChromeOptions options = new ChromeOptions();
++        options.addArguments("--headless");
++
++        WebDriver chromeWebDriver = new ChromeDriver();
+ 
+-        edgeWebDriver.manage().window().maximize();
+-        edgeWebDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(60));
++        JavascriptExecutor js = (JavascriptExecutor) chromeWebDriver;
+ 
+-        edgeWebDriver.get(FITNESS_WORLD_URL);
++        chromeWebDriver.manage().window().maximize();
++        chromeWebDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(60));
+ 
+-        WebDriverWait wait = new WebDriverWait(edgeWebDriver, Duration.ofSeconds(60));
++        chromeWebDriver.get(FITNESS_WORLD_URL);
++
++        WebDriverWait wait = new WebDriverWait(chromeWebDriver, Duration.ofSeconds(60));
+ 
+         By elementLocator = By.className("close-popup");
+ 
+@@ -48,12 +62,12 @@
+             // Wait until the element is present on the page
+             WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(elementLocator));
+ 
+-            By closeButtonAvailability = By.className("close-popup");
++            By closeButtonAvailability = By.xpath("/html/body/main/div[6]/div[2]/div[1]");
+             //Email Signup popup is being selected
+ 
+-            if (isElementPresent(edgeWebDriver, closeButtonAvailability)) {
++            if (isElementPresent(chromeWebDriver, closeButtonAvailability)) {
+                 //condition checks whether the button is present on screen or not
+-                WebElement closeButton = edgeWebDriver.findElement(By.className("close-popup"));
++                WebElement closeButton = chromeWebDriver.findElement(By.xpath("/html/body/main/div[6]/div[2]/div[1]"));
+                 //if button is present on screen than it clicked and pop is closed
+                 closeButton.click();
+                 System.out.println("Email Signup popup Cancelled clicked successfully!");
+@@ -62,15 +76,16 @@
+         catch (Exception e) {
+             System.out.println("Element not found within the specified time.");
+         }
+-try{
+-        WebElement parentElement = edgeWebDriver.findElement(By.className("club-container"));;
++        try{
++            WebElement parentElement = chromeWebDriver.findElement(By.xpath("/html/body/main/section[2]/div/div/div[1]/div[2]"));;
+ 
+-        // Scroll to the specific element
+-        js.executeScript("arguments[0].scrollIntoView(true);", parentElement);
++            // Scroll to the specific element
++            js.executeScript("arguments[0].scrollIntoView(true);", parentElement);
+ 
+-        //List < WebElement > maincontainers = edgeWebDriver.findElements(By.className("club-option__benefits"));
+-        List<WebElement> maincontainers = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("club-option__benefits")));
+-        List<FitnessWorldMembership> memberships = new ArrayList<>();
++            //List < WebElement > maincontainers = chromeWebDriver.findElements(By.className("club-option__benefits"));
++            List<WebElement> maincontainers = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("club-option__benefits")));
++
++            List<FitnessWorldMembership> memberships = new ArrayList<>();
+ 
+             for (WebElement childEle : maincontainers) {
+                 String title = childEle.findElement(By.tagName("h3")).getText().trim().replaceAll("BI-WEEKLY", "Per month").replaceAll("$", "");
+@@ -92,112 +107,112 @@
+ 
+             String json = gson.toJson(memberships);
+ 
+-            edgeWebDriver.quit();
++            chromeWebDriver.quit();
+ 
+             return json;
+         } catch (Exception e) {
+             System.out.println("Error occurred while scraping Fitness World website:");
+             e.printStackTrace();
+-            edgeWebDriver.quit();
++            chromeWebDriver.quit();
+             return null;
+         }
+     }
+ 
+     public String webScraperForGL(String location) {
+-            System.setProperty("webdriver.edge.driver", CHROME_DRIVER_PATH);
+-            WebDriver edgeWebDriver = new EdgeDriver();
+-            JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
++        System.setProperty("webdriver.edge.driver", CHROME_DRIVER_PATH);
++        WebDriver chromeWebDriver = new EdgeDriver();
++        JavascriptExecutor js = (JavascriptExecutor) chromeWebDriver;
+ 
+-            edgeWebDriver.manage().window().maximize();
+-            edgeWebDriver.get(GOODLIFE_FITNESS_URL);
+-            WebDriverWait wait = new WebDriverWait(edgeWebDriver, Duration.ofSeconds(50));
+-            try {
+-                WebElement performanceLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("label[for='performance-membership']")));
+-                WebElement ultimateLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("label[for='ultimate-membership']")));
+-                WebElement premiumLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("label[for='all-clubs-membership']")));
++        chromeWebDriver.manage().window().maximize();
++        chromeWebDriver.get(GOODLIFE_FITNESS_URL);
++        WebDriverWait wait = new WebDriverWait(chromeWebDriver, Duration.ofSeconds(50));
++        try {
++            WebElement performanceLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("label[for='performance-membership']")));
++            WebElement ultimateLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("label[for='ultimate-membership']")));
++            WebElement premiumLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("label[for='all-clubs-membership']")));
+ 
+-                js.executeScript("arguments[0].scrollIntoView(true);", performanceLabel);
++            js.executeScript("arguments[0].scrollIntoView(true);", performanceLabel);
+ 
+-                WebElement GLMainContainer = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("c-membership-types-container")));
+-                List<WebElement> prices = GLMainContainer.findElements(By.className("c-card--membership-price__dollar"));
+-                List<WebElement> features = edgeWebDriver.findElements(By.cssSelector("tr.c-pricing-mobile__row"));
++            WebElement GLMainContainer = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("c-membership-types-container")));
++            List<WebElement> prices = GLMainContainer.findElements(By.className("c-card--membership-price__dollar"));
++            List<WebElement> features = chromeWebDriver.findElements(By.cssSelector("tr.c-pricing-mobile__row"));
+ 
+-                // Create a map to hold the membership types
+-                Map<String, Object> glData = new LinkedHashMap<>();
+-                List<Map<String, Object>> membershipTypes = new ArrayList<>();
+-                Map<String, Object> glData_Premium = new LinkedHashMap<>();
+-                glData_Premium.put("membershipType", premiumLabel.getText());
+-                Map<String, Object> glData_Ultimate = new LinkedHashMap<>();
+-                glData_Ultimate.put("membershipType", ultimateLabel.getText());
+-                Map<String, Object> glData_Performance = new LinkedHashMap<>();
+-                glData_Performance.put("membershipType", performanceLabel.getText());
+-                List<String> premiumFeatures = new ArrayList<>();
+-                List<String> ultimateFeatures = new ArrayList<>();
+-                List<String> performanceFeature = new ArrayList<>();
++            // Create a map to hold the membership types
++            Map<String, Object> glData = new LinkedHashMap<>();
++            List<Map<String, Object>> membershipTypes = new ArrayList<>();
++            Map<String, Object> glData_Premium = new LinkedHashMap<>();
++            glData_Premium.put("membershipType", premiumLabel.getText());
++            Map<String, Object> glData_Ultimate = new LinkedHashMap<>();
++            glData_Ultimate.put("membershipType", ultimateLabel.getText());
++            Map<String, Object> glData_Performance = new LinkedHashMap<>();
++            glData_Performance.put("membershipType", performanceLabel.getText());
++            List<String> premiumFeatures = new ArrayList<>();
++            List<String> ultimateFeatures = new ArrayList<>();
++            List<String> performanceFeature = new ArrayList<>();
+ 
+-                for (WebElement feature : features) {
+-                    List<WebElement> unhighlightedCells = feature.findElements(By.cssSelector("td.c-pricing-mobile__available"));
+-                    WebElement highlightedCell = feature.findElement(By.cssSelector("td.col.c-pricing-mobile__available.highlight"));
++            for (WebElement feature : features) {
++                List<WebElement> unhighlightedCells = feature.findElements(By.cssSelector("td.c-pricing-mobile__available"));
++                WebElement highlightedCell = feature.findElement(By.cssSelector("td.col.c-pricing-mobile__available.highlight"));
+ 
+-                    Map<String, Object> membershipType = new LinkedHashMap<>();
++                Map<String, Object> membershipType = new LinkedHashMap<>();
+ 
+-                    // Extract unhighlighted features from the respective cells
+-                    for (WebElement cell : unhighlightedCells.get(4).findElements(By.tagName("li"))) {
+-                        String text = cell.getText().trim();
+-                        if (!text.isEmpty()) {
+-                            premiumFeatures.add(text);
+-                        }
+-                    }
++                // Extract unhighlighted features from the respective cells
++                for (WebElement cell : unhighlightedCells.get(4).findElements(By.tagName("li"))) {
++                    String text = cell.getText().trim();
++                    if (!text.isEmpty()) {
++                        premiumFeatures.add(text);
++                    }
++                }
+ 
+-                    for (WebElement cell : unhighlightedCells.get(6).findElements(By.tagName("li"))) {
+-                        String text = cell.getText().trim();
+-                        if (!text.isEmpty()) {
+-                            ultimateFeatures.add(text);
+-                        }
+-                    }
++                for (WebElement cell : unhighlightedCells.get(6).findElements(By.tagName("li"))) {
++                    String text = cell.getText().trim();
++                    if (!text.isEmpty()) {
++                        ultimateFeatures.add(text);
++                    }
++                }
+ 
+-                    // Extract highlighted features from the highlighted cell
+-                    for (WebElement cell : highlightedCell.findElements(By.tagName("li"))) {
+-                        String text = cell.getText().trim();
+-                        if (!text.isEmpty()) {
+-                            performanceFeature.add(text);
+-                        }
+-                    }
+-                }
+-                glData_Premium.put("gymName", "GOODLIFE_FITNESS");
+-                glData_Ultimate.put("gymName", "GOODLIFE_FITNESS");
+-                glData_Performance.put("gymName", "GOODLIFE_FITNESS");
+-                glData_Premium.put("features", premiumFeatures);
+-                glData_Ultimate.put("features", ultimateFeatures);
+-                glData_Performance.put("features", performanceFeature);
+-                List<Integer> priceList = getPrices(prices);
+-                glData_Premium.put("price", "$"+priceList.get(0)+"/month");
+-                glData_Ultimate.put("price","$"+priceList.get(1)+"/month");
+-                glData_Performance.put("price", "$"+priceList.get(2)+"/month");
++                // Extract highlighted features from the highlighted cell
++                for (WebElement cell : highlightedCell.findElements(By.tagName("li"))) {
++                    String text = cell.getText().trim();
++                    if (!text.isEmpty()) {
++                        performanceFeature.add(text);
++                    }
++                }
++            }
++            glData_Premium.put("gymName", "GOODLIFE_FITNESS");
++            glData_Ultimate.put("gymName", "GOODLIFE_FITNESS");
++            glData_Performance.put("gymName", "GOODLIFE_FITNESS");
++            glData_Premium.put("features", premiumFeatures);
++            glData_Ultimate.put("features", ultimateFeatures);
++            glData_Performance.put("features", performanceFeature);
++            List<Integer> priceList = getPrices(prices);
++            glData_Premium.put("price", "$"+priceList.get(0)+"/month");
++            glData_Ultimate.put("price","$"+priceList.get(1)+"/month");
++            glData_Performance.put("price", "$"+priceList.get(2)+"/month");
+ 
+-                ObjectMapper objectMapper = new ObjectMapper();
+-                GoodLifeMembership gl1=objectMapper.convertValue(glData_Premium, GoodLifeMembership.class);
+-                mongoOps.save(gl1,"plans");
+-                GoodLifeMembership gl2=objectMapper.convertValue(glData_Ultimate, GoodLifeMembership.class);
+-                mongoOps.save(gl2,"plans");
+-                GoodLifeMembership gl3=objectMapper.convertValue(glData_Performance, GoodLifeMembership.class);
+-                mongoOps.save(gl3,"plans");
+-                membershipTypes.add(glData_Premium);
+-                membershipTypes.add(glData_Ultimate);
+-                membershipTypes.add(glData_Performance);
++            ObjectMapper objectMapper = new ObjectMapper();
++            GoodLifeMembership gl1=objectMapper.convertValue(glData_Premium, GoodLifeMembership.class);
++            mongoOps.save(gl1,"plans");
++            GoodLifeMembership gl2=objectMapper.convertValue(glData_Ultimate, GoodLifeMembership.class);
++            mongoOps.save(gl2,"plans");
++            GoodLifeMembership gl3=objectMapper.convertValue(glData_Performance, GoodLifeMembership.class);
++            mongoOps.save(gl3,"plans");
++            membershipTypes.add(glData_Premium);
++            membershipTypes.add(glData_Ultimate);
++            membershipTypes.add(glData_Performance);
+ 
+-                // Convert the map to JSON using Gson
+-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+-                String json = gson.toJson(membershipTypes);
++            // Convert the map to JSON using Gson
++            Gson gson = new GsonBuilder().setPrettyPrinting().create();
++            String json = gson.toJson(membershipTypes);
+ 
+-                edgeWebDriver.quit(); // Quit the WebDriver
++            chromeWebDriver.quit(); // Quit the WebDriver
+ 
+-                return json; // Return the JSON string
+-            } catch (Exception e) {
+-                e.printStackTrace();
+-                edgeWebDriver.quit();
+-                return null;
+-            }
++            return json; // Return the JSON string
++        } catch (Exception e) {
++            e.printStackTrace();
++            chromeWebDriver.quit();
++            return null;
++        }
+ 
+ 
+     }
+@@ -205,16 +220,16 @@
+ 
+     public String webScraperForPF(String location) {
+         System.setProperty("webdriver.edge.driver", CHROME_DRIVER_PATH);
+-        WebDriver edgeWebDriver = new EdgeDriver();
+-        JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
++        WebDriver chromeWebDriver = new EdgeDriver();
++        JavascriptExecutor js = (JavascriptExecutor) chromeWebDriver;
+ 
+-        edgeWebDriver.manage().window().maximize();
+-        edgeWebDriver.get(PLATNET_FITNESS_URL);
+-        WebDriverWait wait = new WebDriverWait(edgeWebDriver, Duration.ofSeconds(50));
++        chromeWebDriver.manage().window().maximize();
++        chromeWebDriver.get(PLATNET_FITNESS_URL);
++        WebDriverWait wait = new WebDriverWait(chromeWebDriver, Duration.ofSeconds(50));
+         try{
+-            WebElement inputElement = edgeWebDriver.findElement(By.xpath("/html/body/div[3]/div/div/div[1]/div[4]/div/form/div/div/div/input"));
++            WebElement inputElement = chromeWebDriver.findElement(By.xpath("/html/body/div[3]/div/div/div[1]/div[4]/div/form/div/div/div/input"));
+             inputElement.sendKeys(location);
+-            WebElement joinUsButton = edgeWebDriver.findElement(By.xpath("/html/body/div[3]/div/div/div[1]/div[4]/div/form/div/button"));
++            WebElement joinUsButton = chromeWebDriver.findElement(By.xpath("/html/body/div[3]/div/div/div[1]/div[4]/div/form/div/button"));
+             // Click the "Join Us" button
+             joinUsButton.click();
+ 
+@@ -226,7 +241,7 @@
+                 locationName = placeElement.findElement(By.cssSelector("b.text-lg.tracking-\\[\\-0\\.015em\\].text-common-black")).getText();
+                 String detailsLink = placeElement.findElement(By.cssSelector("a[href*='/offers']")).getAttribute("href");
+                 // Navigate to the URL specified in the href attribute
+-                edgeWebDriver.get(detailsLink);
++                chromeWebDriver.get(detailsLink);
+                 break;
+             };
+             List<WebElement> featuresButtons = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("/html/body/div[1]/div[6]/div/div/div/div/div/div[2]/div/div[6]/button")));
+@@ -236,13 +251,13 @@
+                 button.click();
+             }
+             //After getting to membership details page
+-            String membershipType1 = edgeWebDriver.findElement(By.xpath("/html/body/div[1]/div[6]/div/div/div[1]/div/div/div[2]/div/div[1]/p/span")).getText();
+-            String membershipType2 = edgeWebDriver.findElement(By.xpath("/html/body/div[1]/div[6]/div/div/div[2]/div/div/div[2]/div/div[1]/p/span")).getText();
+-            String price1 =  edgeWebDriver.findElement(By.xpath("/html/body/div[1]/div[6]/div/div/div[1]/div/div/div[2]/div/p[1]")).getText();
+-            String price2 = edgeWebDriver.findElement(By.xpath("/html/body/div[1]/div[6]/div/div/div[2]/div/div/div[2]/div/p[1]")).getText();
+-            String features1= edgeWebDriver.findElement(By.xpath("/html/body/div[1]/div[6]/div/div/div[1]/div/div/div[2]/div/div[4]/ul")).getText();
++            String membershipType1 = chromeWebDriver.findElement(By.xpath("/html/body/div[1]/div[6]/div/div/div[1]/div/div/div[2]/div/div[1]/p/span")).getText();
++            String membershipType2 = chromeWebDriver.findElement(By.xpath("/html/body/div[1]/div[6]/div/div/div[2]/div/div/div[2]/div/div[1]/p/span")).getText();
++            String price1 =  chromeWebDriver.findElement(By.xpath("/html/body/div[1]/div[6]/div/div/div[1]/div/div/div[2]/div/p[1]")).getText();
++            String price2 = chromeWebDriver.findElement(By.xpath("/html/body/div[1]/div[6]/div/div/div[2]/div/div/div[2]/div/p[1]")).getText();
++            String features1= chromeWebDriver.findElement(By.xpath("/html/body/div[1]/div[6]/div/div/div[1]/div/div/div[2]/div/div[4]/ul")).getText();
+             String[] features1List = features1.split("\\n");
+-            String features2= edgeWebDriver.findElement(By.xpath("/html/body/div[1]/div[6]/div/div/div[2]/div/div/div[2]/div/div[4]/ul")).getText();
++            String features2= chromeWebDriver.findElement(By.xpath("/html/body/div[1]/div[6]/div/div/div[2]/div/div/div[2]/div/div[4]/ul")).getText();
+             String[] features2List = features2.split("\\n");
+             PlanetFitnessMembership plmembershipType1 = new PlanetFitnessMembership(membershipType1, features1List, price1);
+             PlanetFitnessMembership plmembershipType2 = new PlanetFitnessMembership(membershipType2, features2List, price2);
+@@ -260,8 +275,8 @@
+             System.out.println(e);
+         }
+ 
+-       // edgeWebDriver.quit(); // Quit the WebDriver
+-   return "Something went wrong";
++        // chromeWebDriver.quit(); // Quit the WebDriver
++        return "Something went wrong";
+     }
+ 
+     private List<Integer> getPrices(List<WebElement> prices) {
+@@ -294,4 +309,4 @@
+ 
+ 
+ 
+-}
++}
+\ No newline at end of file
+Index: src/main/java/org/fitness/utilities/Utilities.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.fitness.utilities;\n\nimport com.google.gson.Gson;\n\nimport java.io.*;\nimport java.util.*;\nimport java.util.regex.Matcher;\nimport java.util.regex.Pattern;\n\n\npublic class Utilities {\n\n\n    public static final String citySearchFile = \"/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/CitySearchHistory.txt\";\n    private static final String URL_REGEX = \"(\\\\b(https?|ftp|file)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]\";\n\n    Gson gson = new Gson();\n    public Hashtable<String, Integer> fileToHashmap(String filePath) {\n        Hashtable<String, Integer> srhCount = new Hashtable<>();\n        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {\n            String line;\n            while ((line = br.readLine()) != null) {\n                String city = line.trim();\n\n                if (srhCount.containsKey(city)) {  // if city has been added already.\n                    srhCount.put(city, srhCount.get(city) + 1);\n                } else {\n                    srhCount.put(city, 1);\n                }\n            }\n            return srhCount;\n        } catch (IOException e) {\n            System.out.println(e);\n            return null;\n        }\n    }\n\n\n    public Map<String, String> historySearchList() {\n        Hashtable<String, Integer> citySrhCount;\n        citySrhCount = fileToHashmap(citySearchFile);\n        List<CitySearchFrqPair> srchdCityList = new ArrayList<>();\n        // preparing list of CitySearchFrqPair from the hashtable.\n        for (String key : Collections.list(citySrhCount.keys())) {\n            srchdCityList.add(new CitySearchFrqPair(key, citySrhCount.get(key)));\n        }\n\n        // sorting the list in the descending order.\n        Collections.sort(srchdCityList);\n\n        // showing list of cities with its search frequency.\n        Map<String, String> citySearchFrequencyMap = new HashMap<>();\n\n        for (int i = 0; i < srchdCityList.size(); i++) {\n            String cityName = srchdCityList.get(i).cityName;\n            int frequency = srchdCityList.get(i).frq;\n\n            String formattedString = (i + 1) + \". \" + cityName + \"\\t\\tsearched \" + frequency + \" times\";\n\n            // Using the city name as the key and the formatted string as the value\n            citySearchFrequencyMap.put(cityName, formattedString);\n        }\n\n        // Now, if you want to print the contents of the map, you can do so like this:\n        for (String cityName : citySearchFrequencyMap.keySet()) {\n            System.out.println(citySearchFrequencyMap.get(cityName));\n        }\n\n        return citySearchFrequencyMap;\n    }\n\n    public boolean isUrlValid(String url) {\n        Pattern pattern = Pattern.compile(URL_REGEX);\n        Matcher matcher = pattern.matcher(url);\n        return matcher.matches();\n    }\n    public List<String> proceedWithManualInput(String locationIn) {\n        Hashtable<String, Integer> citySrhCount;\n        citySrhCount = fileToHashmap(citySearchFile);\n        if (locationIn.charAt(locationIn.length() - 1) == '*') {\n            locationIn = locationIn.substring(0, locationIn.length() - 1);\n            // check if it is a valid string\n            WordCompletion wordCompletion = new WordCompletion(\"/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/Cities.txt\");\n            List<String> cmpltdWordList = wordCompletion.findWordsWithPrefix(locationIn);\n\n            return cmpltdWordList;\n        } else {\n            SpellChecker spellChecker = new SpellChecker(\"/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/Cities.txt\");\n            if (spellChecker.searchInTrie(locationIn)) {\n                System.out.println(\"LocationIn: \" + locationIn + \", searchResult: \" + spellChecker.searchInTrie(locationIn));\n                List<String> list = new ArrayList<>();\n                list.add(locationIn);\n                // recording the searched location in the history.\n                if (citySrhCount != null && citySrhCount.contains(locationIn)) {  // if city has been added already.\n                    citySrhCount.put(locationIn, citySrhCount.get(locationIn)+1);\n                }\n                else {\n                    citySrhCount.put(locationIn, 1);\n                }\n\n                // add searched city into history file\n                try (BufferedWriter BufferWriter = new BufferedWriter(new FileWriter(citySearchFile, true))) {\n                    BufferWriter.write(locationIn);\n                    BufferWriter.newLine(); // new line\n                    BufferWriter.close();\n                }\n                catch (IOException e) {\n                   System.out.println(\"Something went wrong while interacting with file\");\n                }\n                return list;\n            }  else {\n                List<String> suggestions = spellChecker.suggestCorrectionsCNC(locationIn);\n                if (suggestions.isEmpty()) {\n                    ArrayList list = new ArrayList();\n                    list.add(\"No city found in the record matching to the given input. Please try again\");\n                } else {\n                    // printOnConsole(msg, \"Did you mean: \");\n                    ArrayList list = new ArrayList();\n                    for (int i = 0; i < suggestions.size(); i++) {\n                        list.add(suggestions.get(i));\n                    }\n\n                    return list;\n\n                }\n            }\n        }\n        return null;\n    }\n}\n\n    class CitySearchFrqPair implements Comparable<CitySearchFrqPair> {\n        String cityName;\n        int frq;\n\n        public CitySearchFrqPair(String cityName, int frq) {\n            this.cityName = cityName;\n            this.frq = frq;\n        }\n\n        @Override\n        public int compareTo(CitySearchFrqPair o) {\n            return Integer.compare(o.frq, this.frq);\n        }\n    }\n\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/org/fitness/utilities/Utilities.java b/src/main/java/org/fitness/utilities/Utilities.java
+--- a/src/main/java/org/fitness/utilities/Utilities.java	(revision 6a91f45bd9bec4b50c3ee47c212417f1c9d57a11)
++++ b/src/main/java/org/fitness/utilities/Utilities.java	(date 1711079765499)
+@@ -11,7 +11,7 @@
+ public class Utilities {
+ 
+ 
+-    public static final String citySearchFile = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/CitySearchHistory.txt";
++    public static final String citySearchFile = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/Files/CitySearchHistory.txt";
+     private static final String URL_REGEX = "(\\b(https?|ftp|file)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]";
+ 
+     Gson gson = new Gson();
+@@ -80,12 +80,12 @@
+         if (locationIn.charAt(locationIn.length() - 1) == '*') {
+             locationIn = locationIn.substring(0, locationIn.length() - 1);
+             // check if it is a valid string
+-            WordCompletion wordCompletion = new WordCompletion("/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/Cities.txt");
++            WordCompletion wordCompletion = new WordCompletion("/Users/rohansethi/Downloads/ACC_Project/src/main/resources/Files/Cities.txt");
+             List<String> cmpltdWordList = wordCompletion.findWordsWithPrefix(locationIn);
+ 
+             return cmpltdWordList;
+         } else {
+-            SpellChecker spellChecker = new SpellChecker("/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/Cities.txt");
++            SpellChecker spellChecker = new SpellChecker("/Users/rohansethi/Downloads/ACC_Project/src/main/resources/Files/Cities.txt");
+             if (spellChecker.searchInTrie(locationIn)) {
+                 System.out.println("LocationIn: " + locationIn + ", searchResult: " + spellChecker.searchInTrie(locationIn));
+                 List<String> list = new ArrayList<>();
+Index: src/main/resources/Files/CitySearchHistory.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>windsor\nwindsor\nwindsor\nwindsor\nwindsor\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/Files/CitySearchHistory.txt b/src/main/resources/Files/CitySearchHistory.txt
+--- a/src/main/resources/Files/CitySearchHistory.txt	(revision 6a91f45bd9bec4b50c3ee47c212417f1c9d57a11)
++++ b/src/main/resources/Files/CitySearchHistory.txt	(date 1711082384442)
+@@ -3,3 +3,15 @@
+ windsor
+ windsor
+ windsor
++windsor
++Windsor
++windsor
++windsor
++Windsor
++Windsor
++Windsor
++windsor
++windsor
++windsor
++windsor
++windsor
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"dbb44a92-9123-406d-883e-c4c801067d63\" name=\"Changes\" comment=\"\">\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/org/fitness/classes/FitnessWorldMembership.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/org/fitness/classes/GoodLifeMembership.java\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/src/main/java/org/fitness/classes/PlanetFitnessMembership.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/build.gradle\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/build.gradle\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/org/fitness/controller/FitnessController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/org/fitness/controller/FitnessController.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/org/fitness/services/FitnessService.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/org/fitness/services/FitnessService.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/resources/Files/KeySearchHistory.txt\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/resources/Files/KeySearchHistory.txt\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/resources/application.yml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/resources/application.yml\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"CodeInsightWorkspaceSettings\">\n    <option name=\"optimizeImportsOnTheFly\" value=\"true\" />\n  </component>\n  <component name=\"ExternalProjectsData\">\n    <projectState path=\"$PROJECT_DIR$\">\n      <ProjectState />\n    </projectState>\n  </component>\n  <component name=\"ExternalProjectsManager\">\n    <system id=\"GRADLE\">\n      <state>\n        <task path=\"$PROJECT_DIR$\">\n          <activation />\n        </task>\n        <projects_view>\n          <tree_state>\n            <expand>\n              <path>\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\n                <item name=\"FitnessTrack_Pro\" type=\"f1a62948:ProjectNode\" />\n              </path>\n              <path>\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\n                <item name=\"FitnessTrack_Pro\" type=\"f1a62948:ProjectNode\" />\n                <item name=\"Tasks\" type=\"e4a08cd1:TasksNode\" />\n              </path>\n              <path>\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\n                <item name=\"FitnessTrack_Pro\" type=\"f1a62948:ProjectNode\" />\n                <item name=\"Tasks\" type=\"e4a08cd1:TasksNode\" />\n                <item name=\"build\" type=\"c8890929:TasksNode$1\" />\n              </path>\n              <path>\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\n                <item name=\"FitnessTrack_Pro\" type=\"f1a62948:ProjectNode\" />\n                <item name=\"Tasks\" type=\"e4a08cd1:TasksNode\" />\n                <item name=\"help\" type=\"c8890929:TasksNode$1\" />\n              </path>\n            </expand>\n            <select />\n          </tree_state>\n        </projects_view>\n      </state>\n    </system>\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Interface\" />\n        <option value=\"Class\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 4\n}</component>\n  <component name=\"ProjectId\" id=\"2de1UAZ9daOtIRuJL4SUlGz0e3G\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\"><![CDATA[{\n  \"keyToString\": {\n    \"Downloaded.Files.Path.Enabled\": \"false\",\n    \"Gradle.Build FitnessTrack_Pro.executor\": \"Run\",\n    \"Gradle.FitnessTrack_Pro [:Main.main()].executor\": \"Run\",\n    \"Gradle.FitnessTrack_Pro [build].executor\": \"Run\",\n    \"Gradle.FitnessTrack_Pro [dependencies].executor\": \"Run\",\n    \"Gradle.Tests in 'FitnessTrack_Pro'.executor\": \"Run\",\n    \"Gradle.Upgrade Gradle wrapper.executor\": \"Run\",\n    \"Repository.Attach.Annotations\": \"false\",\n    \"Repository.Attach.JavaDocs\": \"false\",\n    \"Repository.Attach.Sources\": \"false\",\n    \"RequestMappingsPanelOrder0\": \"0\",\n    \"RequestMappingsPanelOrder1\": \"1\",\n    \"RequestMappingsPanelWidth0\": \"75\",\n    \"RequestMappingsPanelWidth1\": \"75\",\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\n    \"Spring Boot.Main.executor\": \"Run\",\n    \"git-widget-placeholder\": \"main\",\n    \"kotlin-language-version-configured\": \"true\",\n    \"last_opened_file_path\": \"/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files\",\n    \"node.js.detected.package.eslint\": \"true\",\n    \"node.js.detected.package.tslint\": \"true\",\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\n    \"nodejs_package_manager_path\": \"npm\",\n    \"onboarding.tips.debug.path\": \"/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/java/org/example/Main.java\",\n    \"project.structure.last.edited\": \"SDKs\",\n    \"project.structure.proportion\": \"0.15\",\n    \"project.structure.side.proportion\": \"0.0\",\n    \"settings.editor.selected.configurable\": \"reference.settingsdialog.IDE.editor.colors.Code With Me\",\n    \"vue.rearranger.settings.migration\": \"true\"\n  }\n}]]></component>\n  <component name=\"RecentsManager\">\n    <key name=\"CreateClassDialog.RecentsKey\">\n      <recent name=\"org.fitness.serviceImpl\" />\n    </key>\n    <key name=\"CopyFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/src/main/resources/Files\" />\n      <recent name=\"$PROJECT_DIR$/src/main/java/org/fitness/utilities\" />\n      <recent name=\"$PROJECT_DIR$/src/main/resources\" />\n      <recent name=\"$PROJECT_DIR$/src/main/resources/WebDriver\" />\n    </key>\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\n      <recent name=\"org.fitness.utilities\" />\n    </key>\n  </component>\n  <component name=\"RunManager\" selected=\"Spring Boot.Main\">\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\n      <option name=\"MAIN_CLASS_NAME\" value=\"org.fitness.Main\" />\n      <module name=\"FitnessTrack_Pro.main\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"org.fitness.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration name=\"FitnessTrack_Pro [build]\" type=\"GradleRunConfiguration\" factoryName=\"Gradle\" temporary=\"true\">\n      <ExternalSystemSettings>\n        <option name=\"executionName\" />\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\n        <option name=\"externalSystemIdString\" value=\"GRADLE\" />\n        <option name=\"scriptParameters\" />\n        <option name=\"taskDescriptions\">\n          <list />\n        </option>\n        <option name=\"taskNames\">\n          <list>\n            <option value=\"build\" />\n          </list>\n        </option>\n        <option name=\"vmOptions\" />\n      </ExternalSystemSettings>\n      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>\n      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>\n      <DebugAllEnabled>false</DebugAllEnabled>\n      <RunAsTest>false</RunAsTest>\n      <method v=\"2\" />\n    </configuration>\n    <configuration name=\"FitnessTrack_Pro [dependencies]\" type=\"GradleRunConfiguration\" factoryName=\"Gradle\" temporary=\"true\">\n      <ExternalSystemSettings>\n        <option name=\"executionName\" />\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\n        <option name=\"externalSystemIdString\" value=\"GRADLE\" />\n        <option name=\"scriptParameters\" />\n        <option name=\"taskDescriptions\">\n          <list />\n        </option>\n        <option name=\"taskNames\">\n          <list>\n            <option value=\"dependencies\" />\n          </list>\n        </option>\n        <option name=\"vmOptions\" />\n      </ExternalSystemSettings>\n      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>\n      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>\n      <DebugAllEnabled>false</DebugAllEnabled>\n      <RunAsTest>false</RunAsTest>\n      <method v=\"2\" />\n    </configuration>\n    <configuration name=\"Tests in 'FitnessTrack_Pro'\" type=\"GradleRunConfiguration\" factoryName=\"Gradle\" temporary=\"true\">\n      <ExternalSystemSettings>\n        <option name=\"executionName\" />\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\n        <option name=\"externalSystemIdString\" value=\"GRADLE\" />\n        <option name=\"scriptParameters\" value=\"\" />\n        <option name=\"taskDescriptions\">\n          <list />\n        </option>\n        <option name=\"taskNames\">\n          <list>\n            <option value=\":test\" />\n          </list>\n        </option>\n        <option name=\"vmOptions\" />\n      </ExternalSystemSettings>\n      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>\n      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>\n      <DebugAllEnabled>false</DebugAllEnabled>\n      <RunAsTest>true</RunAsTest>\n      <method v=\"2\" />\n    </configuration>\n    <configuration name=\"Main\" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\" temporary=\"true\" nameIsGenerated=\"true\">\n      <module name=\"FitnessTrack_Pro.main\" />\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"org.fitness.Main\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"org.fitness.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <recent_temporary>\n      <list>\n        <item itemvalue=\"Spring Boot.Main\" />\n        <item itemvalue=\"Application.Main\" />\n        <item itemvalue=\"Gradle.FitnessTrack_Pro [dependencies]\" />\n        <item itemvalue=\"Gradle.Tests in 'FitnessTrack_Pro'\" />\n        <item itemvalue=\"Gradle.FitnessTrack_Pro [build]\" />\n      </list>\n    </recent_temporary>\n  </component>\n  <component name=\"SharedIndexes\">\n    <attachedChunks>\n      <set>\n        <option value=\"jdk-11.0.22-corretto-11.0.22-4caba194b151-396cc1b2\" />\n        <option value=\"jdk-21.0.2-openjdk-21.0.2-4caba194b151-322ed176\" />\n      </set>\n    </attachedChunks>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"dbb44a92-9123-406d-883e-c4c801067d63\" name=\"Changes\" comment=\"\" />\n      <created>1710353743094</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1710353743094</updated>\n      <workItem from=\"1710353744119\" duration=\"27977000\" />\n      <workItem from=\"1710723328104\" duration=\"24512000\" />\n      <workItem from=\"1710883172637\" duration=\"60976000\" />\n    </task>\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n  </component>\n  <component name=\"XDebuggerManager\">\n    <breakpoint-manager>\n      <breakpoints>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>287</line>\n          <option name=\"timeStamp\" value=\"153\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>285</line>\n          <option name=\"timeStamp\" value=\"154\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>284</line>\n          <option name=\"timeStamp\" value=\"155\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>289</line>\n          <option name=\"timeStamp\" value=\"162\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>291</line>\n          <option name=\"timeStamp\" value=\"163\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>294</line>\n          <option name=\"timeStamp\" value=\"164\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>296</line>\n          <option name=\"timeStamp\" value=\"165\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>300</line>\n          <option name=\"timeStamp\" value=\"166\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>305</line>\n          <option name=\"timeStamp\" value=\"167\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>329</line>\n          <option name=\"timeStamp\" value=\"172\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>219</line>\n          <option name=\"timeStamp\" value=\"191\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>221</line>\n          <option name=\"timeStamp\" value=\"192\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>233</line>\n          <option name=\"timeStamp\" value=\"193\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>237</line>\n          <option name=\"timeStamp\" value=\"194\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>241</line>\n          <option name=\"timeStamp\" value=\"195\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>245</line>\n          <option name=\"timeStamp\" value=\"196\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>249</line>\n          <option name=\"timeStamp\" value=\"197\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>252</line>\n          <option name=\"timeStamp\" value=\"198\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>258</line>\n          <option name=\"timeStamp\" value=\"199\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>265</line>\n          <option name=\"timeStamp\" value=\"200\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>272</line>\n          <option name=\"timeStamp\" value=\"201\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>52</line>\n          <option name=\"timeStamp\" value=\"203\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>55</line>\n          <option name=\"timeStamp\" value=\"205\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>57</line>\n          <option name=\"timeStamp\" value=\"206\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>60</line>\n          <option name=\"timeStamp\" value=\"207\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>93</line>\n          <option name=\"timeStamp\" value=\"208\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>97</line>\n          <option name=\"timeStamp\" value=\"209\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>100</line>\n          <option name=\"timeStamp\" value=\"210\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>102</line>\n          <option name=\"timeStamp\" value=\"211\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>87</line>\n          <option name=\"timeStamp\" value=\"212\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>86</line>\n          <option name=\"timeStamp\" value=\"213\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>67</line>\n          <option name=\"timeStamp\" value=\"214\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>70</line>\n          <option name=\"timeStamp\" value=\"215\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>130</line>\n          <option name=\"timeStamp\" value=\"216\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>132</line>\n          <option name=\"timeStamp\" value=\"217\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>136</line>\n          <option name=\"timeStamp\" value=\"218\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>134</line>\n          <option name=\"timeStamp\" value=\"219\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>143</line>\n          <option name=\"timeStamp\" value=\"220\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>145</line>\n          <option name=\"timeStamp\" value=\"221\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>140</line>\n          <option name=\"timeStamp\" value=\"222\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>139</line>\n          <option name=\"timeStamp\" value=\"223\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>137</line>\n          <option name=\"timeStamp\" value=\"224\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>162</line>\n          <option name=\"timeStamp\" value=\"225\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>164</line>\n          <option name=\"timeStamp\" value=\"226\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>224</line>\n          <option name=\"timeStamp\" value=\"230\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>\n          <line>282</line>\n          <option name=\"timeStamp\" value=\"231\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java</url>\n          <line>82</line>\n          <option name=\"timeStamp\" value=\"245\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java</url>\n          <line>84</line>\n          <option name=\"timeStamp\" value=\"246\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java</url>\n          <line>86</line>\n          <option name=\"timeStamp\" value=\"248\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/FrequencyCount.java</url>\n          <line>14</line>\n          <option name=\"timeStamp\" value=\"254\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/FrequencyCount.java</url>\n          <line>16</line>\n          <option name=\"timeStamp\" value=\"255\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/FrequencyCount.java</url>\n          <line>19</line>\n          <option name=\"timeStamp\" value=\"256\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/FrequencyCount.java</url>\n          <line>21</line>\n          <option name=\"timeStamp\" value=\"257\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/FrequencyCount.java</url>\n          <line>27</line>\n          <option name=\"timeStamp\" value=\"258\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/FrequencyCount.java</url>\n          <line>60</line>\n          <option name=\"timeStamp\" value=\"267\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/FrequencyCount.java</url>\n          <line>62</line>\n          <option name=\"timeStamp\" value=\"268\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/FrequencyCount.java</url>\n          <line>64</line>\n          <option name=\"timeStamp\" value=\"269\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/FrequencyCount.java</url>\n          <line>67</line>\n          <option name=\"timeStamp\" value=\"270\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/FrequencyCount.java</url>\n          <line>71</line>\n          <option name=\"timeStamp\" value=\"271\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/FrequencyCount.java</url>\n          <line>72</line>\n          <option name=\"timeStamp\" value=\"272\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/FrequencyCount.java</url>\n          <line>74</line>\n          <option name=\"timeStamp\" value=\"273\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/FrequencyCount.java</url>\n          <line>65</line>\n          <option name=\"timeStamp\" value=\"274\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/InvertedIndexing.java</url>\n          <line>18</line>\n          <option name=\"timeStamp\" value=\"276\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/InvertedIndexing.java</url>\n          <line>25</line>\n          <option name=\"timeStamp\" value=\"277\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java</url>\n          <line>76</line>\n          <option name=\"timeStamp\" value=\"278\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>43</line>\n          <option name=\"timeStamp\" value=\"279\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>78</line>\n          <option name=\"timeStamp\" value=\"281\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>79</line>\n          <option name=\"timeStamp\" value=\"282\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>82</line>\n          <option name=\"timeStamp\" value=\"283\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>85</line>\n          <option name=\"timeStamp\" value=\"284\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>87</line>\n          <option name=\"timeStamp\" value=\"285\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>88</line>\n          <option name=\"timeStamp\" value=\"286\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>90</line>\n          <option name=\"timeStamp\" value=\"287\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>93</line>\n          <option name=\"timeStamp\" value=\"288\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>94</line>\n          <option name=\"timeStamp\" value=\"289\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>97</line>\n          <option name=\"timeStamp\" value=\"290\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>102</line>\n          <option name=\"timeStamp\" value=\"291\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>103</line>\n          <option name=\"timeStamp\" value=\"292\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>107</line>\n          <option name=\"timeStamp\" value=\"293\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>112</line>\n          <option name=\"timeStamp\" value=\"294\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>111</line>\n          <option name=\"timeStamp\" value=\"295\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>114</line>\n          <option name=\"timeStamp\" value=\"296\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>117</line>\n          <option name=\"timeStamp\" value=\"297\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>119</line>\n          <option name=\"timeStamp\" value=\"299\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java</url>\n          <line>122</line>\n          <option name=\"timeStamp\" value=\"300\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/SpellChecker.java</url>\n          <line>101</line>\n          <option name=\"timeStamp\" value=\"322\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>280</line>\n          <option name=\"timeStamp\" value=\"375\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>244</line>\n          <option name=\"timeStamp\" value=\"398\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>242</line>\n          <option name=\"timeStamp\" value=\"399\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>256</line>\n          <option name=\"timeStamp\" value=\"400\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>259</line>\n          <option name=\"timeStamp\" value=\"401\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>263</line>\n          <option name=\"timeStamp\" value=\"402\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>243</line>\n          <option name=\"timeStamp\" value=\"403\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>245</line>\n          <option name=\"timeStamp\" value=\"404\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/controller/FitnessController.java</url>\n          <line>51</line>\n          <option name=\"timeStamp\" value=\"405\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>48</line>\n          <option name=\"timeStamp\" value=\"409\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>50</line>\n          <option name=\"timeStamp\" value=\"410\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>53</line>\n          <option name=\"timeStamp\" value=\"411\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>55</line>\n          <option name=\"timeStamp\" value=\"413\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>58</line>\n          <option name=\"timeStamp\" value=\"414\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>62</line>\n          <option name=\"timeStamp\" value=\"415\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>68</line>\n          <option name=\"timeStamp\" value=\"416\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>65</line>\n          <option name=\"timeStamp\" value=\"417\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>71</line>\n          <option name=\"timeStamp\" value=\"418\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>72</line>\n          <option name=\"timeStamp\" value=\"419\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>96</line>\n          <option name=\"timeStamp\" value=\"425\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>\n          <line>158</line>\n          <option name=\"timeStamp\" value=\"446\" />\n        </line-breakpoint>\n      </breakpoints>\n    </breakpoint-manager>\n    <pin-to-top-manager>\n      <pinned-members>\n        <PinnedItemInfo parentTag=\"org.openqa.selenium.edge.EdgeDriver\" memberName=\"elementLocation\" />\n        <PinnedItemInfo parentTag=\"java.util.HashMap$Node\" memberName=\"key\" />\n        <PinnedItemInfo parentTag=\"org.openqa.selenium.remote.RemoteWebElement\" memberName=\"parent\" />\n        <PinnedItemInfo parentTag=\"java.util.HashMap$Node\" memberName=\"value\" />\n        <PinnedItemInfo parentTag=\"org.fitness.utilities.DealFinderAPIs$GoodLifeMembership\" memberName=\"benefits\" />\n        <PinnedItemInfo parentTag=\"java.lang.String\" memberName=\"coder\" />\n      </pinned-members>\n    </pin-to-top-manager>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 6a91f45bd9bec4b50c3ee47c212417f1c9d57a11)
++++ b/.idea/workspace.xml	(date 1711115525624)
+@@ -5,17 +5,11 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="dbb44a92-9123-406d-883e-c4c801067d63" name="Changes" comment="">
+-      <change afterPath="$PROJECT_DIR$/src/main/java/org/fitness/classes/FitnessWorldMembership.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/org/fitness/classes/GoodLifeMembership.java" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/main/java/org/fitness/classes/PlanetFitnessMembership.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/controller/FitnessController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/controller/FitnessController.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/serviceImpl/FitnessServiceImpl.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/services/FitnessService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/services/FitnessService.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/resources/Files/KeySearchHistory.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Files/KeySearchHistory.txt" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/fitness/utilities/Utilities.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/Files/CitySearchHistory.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Files/CitySearchHistory.txt" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -90,6 +84,7 @@
+   <component name="PropertiesComponent"><![CDATA[{
+   "keyToString": {
+     "Downloaded.Files.Path.Enabled": "false",
++    "Gradle.Build ACC_Project.executor": "Run",
+     "Gradle.Build FitnessTrack_Pro.executor": "Run",
+     "Gradle.FitnessTrack_Pro [:Main.main()].executor": "Run",
+     "Gradle.FitnessTrack_Pro [build].executor": "Run",
+@@ -243,8 +238,7 @@
+   <component name="SharedIndexes">
+     <attachedChunks>
+       <set>
+-        <option value="jdk-11.0.22-corretto-11.0.22-4caba194b151-396cc1b2" />
+-        <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-322ed176" />
++        <option value="jdk-21.0.1-openjdk-21.0.1-f644763e9732-2f79fb23" />
+       </set>
+     </attachedChunks>
+   </component>
+@@ -259,6 +253,7 @@
+       <workItem from="1710353744119" duration="27977000" />
+       <workItem from="1710723328104" duration="24512000" />
+       <workItem from="1710883172637" duration="60976000" />
++      <workItem from="1711044395267" duration="16358000" />
+     </task>
+     <servers />
+   </component>
+@@ -270,232 +265,232 @@
+       <breakpoints>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>287</line>
++          <line>282</line>
+           <option name="timeStamp" value="153" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>285</line>
++          <line>280</line>
+           <option name="timeStamp" value="154" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>284</line>
++          <line>279</line>
+           <option name="timeStamp" value="155" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>289</line>
++          <line>284</line>
+           <option name="timeStamp" value="162" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>291</line>
++          <line>286</line>
+           <option name="timeStamp" value="163" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>294</line>
++          <line>289</line>
+           <option name="timeStamp" value="164" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>296</line>
++          <line>291</line>
+           <option name="timeStamp" value="165" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>300</line>
++          <line>295</line>
+           <option name="timeStamp" value="166" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>305</line>
++          <line>300</line>
+           <option name="timeStamp" value="167" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>329</line>
++          <line>324</line>
+           <option name="timeStamp" value="172" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>219</line>
++          <line>214</line>
+           <option name="timeStamp" value="191" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>221</line>
++          <line>216</line>
+           <option name="timeStamp" value="192" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>233</line>
++          <line>228</line>
+           <option name="timeStamp" value="193" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>237</line>
++          <line>232</line>
+           <option name="timeStamp" value="194" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>241</line>
++          <line>236</line>
+           <option name="timeStamp" value="195" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>245</line>
++          <line>240</line>
+           <option name="timeStamp" value="196" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>249</line>
++          <line>244</line>
+           <option name="timeStamp" value="197" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>252</line>
++          <line>247</line>
+           <option name="timeStamp" value="198" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>258</line>
++          <line>253</line>
+           <option name="timeStamp" value="199" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>265</line>
++          <line>260</line>
+           <option name="timeStamp" value="200" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>272</line>
++          <line>267</line>
+           <option name="timeStamp" value="201" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>52</line>
++          <line>47</line>
+           <option name="timeStamp" value="203" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>55</line>
++          <line>50</line>
+           <option name="timeStamp" value="205" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>57</line>
++          <line>52</line>
+           <option name="timeStamp" value="206" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>60</line>
++          <line>55</line>
+           <option name="timeStamp" value="207" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>93</line>
++          <line>88</line>
+           <option name="timeStamp" value="208" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>97</line>
++          <line>92</line>
+           <option name="timeStamp" value="209" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>100</line>
++          <line>95</line>
+           <option name="timeStamp" value="210" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>102</line>
++          <line>97</line>
+           <option name="timeStamp" value="211" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>87</line>
++          <line>82</line>
+           <option name="timeStamp" value="212" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>86</line>
++          <line>81</line>
+           <option name="timeStamp" value="213" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>67</line>
++          <line>62</line>
+           <option name="timeStamp" value="214" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>70</line>
++          <line>65</line>
+           <option name="timeStamp" value="215" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>130</line>
++          <line>125</line>
+           <option name="timeStamp" value="216" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>132</line>
++          <line>127</line>
+           <option name="timeStamp" value="217" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>136</line>
++          <line>131</line>
+           <option name="timeStamp" value="218" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>134</line>
++          <line>129</line>
+           <option name="timeStamp" value="219" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>143</line>
++          <line>138</line>
+           <option name="timeStamp" value="220" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>145</line>
++          <line>140</line>
+           <option name="timeStamp" value="221" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>140</line>
++          <line>135</line>
+           <option name="timeStamp" value="222" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>139</line>
++          <line>134</line>
+           <option name="timeStamp" value="223" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>137</line>
++          <line>132</line>
+           <option name="timeStamp" value="224" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>162</line>
++          <line>157</line>
+           <option name="timeStamp" value="225" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>164</line>
++          <line>159</line>
+           <option name="timeStamp" value="226" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>224</line>
++          <line>219</line>
+           <option name="timeStamp" value="230" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinder.java</url>
+-          <line>282</line>
++          <line>277</line>
+           <option name="timeStamp" value="231" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+@@ -699,109 +694,9 @@
+           <option name="timeStamp" value="322" />
+         </line-breakpoint>
+         <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>280</line>
+-          <option name="timeStamp" value="375" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>244</line>
+-          <option name="timeStamp" value="398" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>242</line>
+-          <option name="timeStamp" value="399" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>256</line>
+-          <option name="timeStamp" value="400" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>259</line>
+-          <option name="timeStamp" value="401" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>263</line>
+-          <option name="timeStamp" value="402" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>243</line>
+-          <option name="timeStamp" value="403" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>245</line>
+-          <option name="timeStamp" value="404" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+           <url>file://$PROJECT_DIR$/src/main/java/org/fitness/controller/FitnessController.java</url>
+           <line>51</line>
+           <option name="timeStamp" value="405" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>48</line>
+-          <option name="timeStamp" value="409" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>50</line>
+-          <option name="timeStamp" value="410" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>53</line>
+-          <option name="timeStamp" value="411" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>55</line>
+-          <option name="timeStamp" value="413" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>58</line>
+-          <option name="timeStamp" value="414" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>62</line>
+-          <option name="timeStamp" value="415" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>68</line>
+-          <option name="timeStamp" value="416" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>65</line>
+-          <option name="timeStamp" value="417" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>71</line>
+-          <option name="timeStamp" value="418" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>72</line>
+-          <option name="timeStamp" value="419" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>96</line>
+-          <option name="timeStamp" value="425" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/main/java/org/fitness/utilities/DealFinderAPIs.java</url>
+-          <line>158</line>
+-          <option name="timeStamp" value="446" />
+         </line-breakpoint>
+       </breakpoints>
+     </breakpoint-manager>

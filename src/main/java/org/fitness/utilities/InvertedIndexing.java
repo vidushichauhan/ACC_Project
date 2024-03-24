@@ -6,7 +6,7 @@ import java.util.*;
 public class InvertedIndexing {
 
     private Map<String, Set<String>> invertedIndex;
-	public final String outputFolderName = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/ParsedFiles";
+	public final String outputFolderName = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/ParsedFiles";
 	public Utilities utl = new Utilities();
     public InvertedIndexing() {
         invertedIndex = new HashMap<>();

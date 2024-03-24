@@ -14,7 +14,7 @@ import java.util.Set;
 public class InvertedIndexingAVL {
 
     private AVLTree<String, Set<String>> invertedIndex;
-    public final String outputFolderName = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/ParsedFiles";
+    public final String outputFolderName = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/ParsedFiles";
     public Utilities utl = new Utilities();
 
     public InvertedIndexingAVL() {

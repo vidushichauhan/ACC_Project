@@ -20,10 +20,10 @@ public class FitnessServiceImpl implements FitnessService {
     Utilities utl =new Utilities();
     private static FrequencyCount frequencyCount = new FrequencyCount();
     private static HtmlParser parser = new HtmlParser();
-    public static final String citySearchFile = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/CitySearchHistory.txt";
-    public static String outputFolderName ="/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/ParsedFiles";
+    public static final String citySearchFile = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/Files/CitySearchHistory.txt";
+    public static String outputFolderName ="/Users/rohansethi/Downloads/ACC_Project/src/main/resources/ParsedFiles";
     public static Map<String, Set<String>> i_index;
-    public static final String keywordSearchFile = "/Users/vidushichauhan/IdeaProjects/FitnessTrack_Pro/src/main/resources/Files/KeySearchHistory.txt";
+    public static final String keywordSearchFile = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/Files/KeySearchHistory.txt";
     private static InvertedIndexing invertedIndexing = new InvertedIndexing();
     private static InvertedIndexingAVL  invertedIndexingAVL = new InvertedIndexingAVL();
     public Map<String, String> historySearchList() {
