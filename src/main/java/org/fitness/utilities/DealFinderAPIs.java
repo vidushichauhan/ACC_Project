@@ -29,7 +29,7 @@ public class DealFinderAPIs {
     MongoOperations mongoOps = new MongoTemplate(MongoClients.create(), "ACC_PROJECT");
 
     public String webScraperForFT(String cityName) {
-        System.setProperty("webdriver.chrome.driver", "/Users/vidushichauhan/Desktop/Course SEM1/Advance Computing Concepts/ACC_Project/src/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "/Users/rohansethi/Downloads/Assignment_3/chromedriver");
         WebDriver edgeWebDriver = new ChromeDriver();
         JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
 
@@ -103,7 +103,7 @@ public class DealFinderAPIs {
 
     public String webScraperForGL(String location) {
         // Define the system property to specify the path of ChromeDriver executable
-        System.setProperty("webdriver.chrome.driver", "/Users/vidushichauhan/Desktop/Course SEM1/Advance Computing Concepts/ACC_Project/src/main/resources/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "/Users/rohansethi/Downloads/Assignment_3/chromedriver");
 
         // Initialize a new instance of ChromeDriver to control the Chrome browser
         WebDriver edgeWebDriver = new ChromeDriver();
@@ -205,7 +205,7 @@ public class DealFinderAPIs {
 
 
     public String webScraperForPF(String location) {
-        System.setProperty("webdriver.chrome.driver", "/Users/vidushichauhan/Desktop/Course SEM1/Advance Computing Concepts/ACC_Project/src/main/resources/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "/Users/rohansethi/Downloads/Assignment_3/chromedriver");
         WebDriver edgeWebDriver = new ChromeDriver();
         JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
 
@@ -352,7 +352,7 @@ public class DealFinderAPIs {
 
     public String locationsAvailable(String location) throws InterruptedException {
         List<LocationDetails> listOfGymsWithAddress = new ArrayList<>();
-        System.setProperty("webdriver.chrome.edgeWebDriver", "/Users/vidushichauhan/Desktop/Course SEM1/Advance Computing Concepts/ACC_Project/src/chromedriver");
+        System.setProperty("webdriver.chrome.edgeWebDriver", "/Users/rohansethi/Downloads/Assignment_3/chromedriver");
         WebDriver edgeWebDriver = new ChromeDriver();
         JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
         WebDriverWait wait = new WebDriverWait(edgeWebDriver, Duration.ofSeconds(60));
@@ -367,8 +367,9 @@ public class DealFinderAPIs {
         js.executeScript("arguments[0].scrollIntoView(true);", searchElement);
         //String input="vancouver";
         searchElement.sendKeys(location);
-        Thread.sleep(5000);
+        Thread.sleep(10000);
         searchElement.sendKeys(Keys.ENTER);
+        Thread.sleep(10000);
         WebElement FtLocationContainer = edgeWebDriver.findElement(By.className("join__locations"));
         List<WebElement> Fit4LessLocations = FtLocationContainer.findElements(By.tagName("a"));
         String fullAddress = null;
@@ -516,7 +517,7 @@ public class DealFinderAPIs {
         WebElement LocationSearchInput1 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[2]/div[1]/div/form/input")));
         js.executeScript("arguments[0].value='" + location + "';", LocationSearchInput1);
         // Scroll to the specific element
-        LocationSearchInput1.sendKeys(location);
+        //LocationSearchInput1.sendKeys(location);
         LocationSearchInput1.sendKeys(Keys.ENTER);
 
         WebElement PFLocationContainer = edgeWebDriver.findElement(By.xpath("/html/body/div[2]/div[2]/div[2]/div"));

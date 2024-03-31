@@ -4,11 +4,16 @@ import org.fitness.services.FitnessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 public class FitnessController {
+
+    String citySearchFile = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/Files/CitySearchHistory.txt";
 
     @Autowired
     private final FitnessService fitnessService;
@@ -49,15 +54,35 @@ public class FitnessController {
 
     @RequestMapping("/getFTDetails/{location}")
     public String ftDetails(@PathVariable("location") String location){
+        try (BufferedWriter BufferWriter = new BufferedWriter(new FileWriter(citySearchFile, true))) {
+            BufferWriter.write(location);
+            BufferWriter.newLine(); // No need to close here, try-with-resources handles it.
+        } catch (IOException e) {
+            e.printStackTrace(); // Log stack trace for debugging.
+        }
         return fitnessService.ftDetails(location);
     }
     @RequestMapping("/getGlOutput/{location}")
     public String glDetails(@PathVariable("location") String location){
+        try (BufferedWriter BufferWriter = new BufferedWriter(new FileWriter(citySearchFile, true))) {
+            BufferWriter.write(location);
+            BufferWriter.newLine(); // No need to close here, try-with-resources handles it.
+        } catch (IOException e) {
+            e.printStackTrace(); // Log stack trace for debugging.
+        }
+
         return fitnessService.glDetails(location);
     }
 
     @RequestMapping("/getPFOutput/{location}")
     public String pfDetails(@PathVariable("location") String location){
+        try (BufferedWriter BufferWriter = new BufferedWriter(new FileWriter(citySearchFile, true))) {
+            BufferWriter.write(location);
+            BufferWriter.newLine(); // No need to close here, try-with-resources handles it.
+        } catch (IOException e) {
+            e.printStackTrace(); // Log stack trace for debugging.
+        }
+
         return fitnessService.pfDetails(location);
     }
 
