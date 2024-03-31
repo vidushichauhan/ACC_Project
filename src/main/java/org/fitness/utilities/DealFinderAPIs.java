@@ -355,7 +355,7 @@ public class DealFinderAPIs {
         System.setProperty("webdriver.chrome.edgeWebDriver", "/Users/vidushichauhan/Desktop/Course SEM1/Advance Computing Concepts/ACC_Project/src/chromedriver");
         WebDriver edgeWebDriver = new ChromeDriver();
         JavascriptExecutor js = (JavascriptExecutor) edgeWebDriver;
-        WebDriverWait wait = new WebDriverWait(edgeWebDriver, Duration.ofSeconds(30));
+        WebDriverWait wait = new WebDriverWait(edgeWebDriver, Duration.ofSeconds(60));
 
         edgeWebDriver.manage().window().maximize();
         edgeWebDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
@@ -426,14 +426,28 @@ public class DealFinderAPIs {
         }
 
         ///-------------------------------------------------------------------------------------------------
-
+        System.out.println("GoodLife Fitness Web Browser Scraping");
         edgeWebDriver.get("https://www.goodlifefitness.com/clubs.html");
+        try {
+            Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+
+            // Accept the alert (click OK)
+            alert.accept();
+            System.out.println("Alert was present and accepted.");
+        } catch (TimeoutException e) {
+            // Alert didn't appear within the wait time
+            System.out.println("No alert appeared within the wait time.");
+        } catch (NoAlertPresentException e) {
+            // In case alert is not present at all
+            System.out.println("No alert is present.");
+        }
+
         WebElement LocationSearchInput = edgeWebDriver.findElement(By.id("club-search"));
         LocationSearchInput.sendKeys(location);
 
 
 
-        WebElement LocationSearchButton = wait.until(ExpectedConditions.elementToBeClickable(By.className("c-search__button")));
+        WebElement LocationSearchButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div/div[2]/div/div[2]/div/div[3]/div/div[4]/div[1]/div[1]/div/div[2]/button")));
         js.executeScript("arguments[0].scrollIntoView(true);", LocationSearchButton);
         Thread.sleep(10000); // Not recommended for production use; use for testing purposes
         LocationSearchButton.click();
@@ -446,7 +460,7 @@ public class DealFinderAPIs {
         if (isElementPresent(edgeWebDriver, GLLocationAvailability)) {
             try {
                 // Sleep for 3 seconds (3000 milliseconds)
-                Thread.sleep(5000);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 // Handle the exception if necessary
                 e.printStackTrace();
@@ -496,11 +510,13 @@ public class DealFinderAPIs {
         }
 
         ///------------------------------------------------------------------------------------------------------
+        System.out.println("Planet Fitness Web Browser Scraping");
         edgeWebDriver.get("https://www.planetfitness.ca/gyms/");
-        WebElement LocationSearchInput1 = edgeWebDriver.findElement(By.xpath("//*[@id=\"search\"]"));
-        LocationSearchInput1.sendKeys(location);
+         // Wait for the search input element to be visible and interactable
+        WebElement LocationSearchInput1 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[2]/div[1]/div/form/input")));
+        js.executeScript("arguments[0].value='" + location + "';", LocationSearchInput1);
         // Scroll to the specific element
-        Thread.sleep(5000);
+        LocationSearchInput1.sendKeys(location);
         LocationSearchInput1.sendKeys(Keys.ENTER);
 
         WebElement PFLocationContainer = edgeWebDriver.findElement(By.xpath("/html/body/div[2]/div[2]/div[2]/div"));
