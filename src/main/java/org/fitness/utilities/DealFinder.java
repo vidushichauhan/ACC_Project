@@ -405,4 +405,8 @@ public class DealFinder {
       return Double.parseDouble(numericString);
   }
 
+  public String locationsAvailable(String location) {
+
+    return "hello";
+  }
 }

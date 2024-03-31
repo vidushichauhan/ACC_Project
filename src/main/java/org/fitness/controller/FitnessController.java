@@ -66,5 +66,10 @@ public class FitnessController {
         return fitnessService.bestDeals();
     }
 
+    @RequestMapping("/availableLocation/{location}")
+    public String locationAvailable(@PathVariable("location") String location) throws InterruptedException {
+        return fitnessService.locationsAvailable(location);
+    }
+
 
 }

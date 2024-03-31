@@ -26,4 +26,6 @@ public interface FitnessService {
     String pfDetails(String location);
 
     List<Map> bestDeals();
+
+    String locationsAvailable(String location) throws InterruptedException;
 }

@@ -26,6 +26,7 @@ public class FitnessServiceImpl implements FitnessService {
     public static final String keywordSearchFile = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/Files/KeySearchHistory.txt";
     private static InvertedIndexing invertedIndexing = new InvertedIndexing();
     private static InvertedIndexingAVL  invertedIndexingAVL = new InvertedIndexingAVL();
+
     public Map<String, String> historySearchList() {
         // To get list of cities that were searched before
         return utl.historySearchList();
@@ -139,6 +140,11 @@ public class FitnessServiceImpl implements FitnessService {
                 .collect(Collectors.toList());
 
         return top3Deals; // or return top3Deals if needed
+    }
+
+    @Override
+    public String locationsAvailable(String location) throws InterruptedException {
+        return dealFinderAPIs.locationsAvailable(location);
     }
 
     private double getPriceFromDeal(String priceString) {
