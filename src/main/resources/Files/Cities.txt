@@ -1,75 +1,75 @@
-Toronto
-Montreal
-Vancouver
-Calgary
-Edmonton
-Ottawa
-Winnipeg
-Quebec City
-Hamilton
-Kitchener
-London
-Victoria
-Halifax
-Oshawa
-Windsor
-Saskatoon
-Regina
-St. John's
-Barrie
-Kelowna
-Sherbrooke
-Trois-Rivières
-Saint John
-Thunder Bay
-Moncton
-Guelph
-Kingston
-Sudbury
-Sault Ste. Marie
-Penticton
-Chatham-Kent
-Kamloops
-Chilliwack
-Fredericton
-Prince George
-Drummondville
-Brooks
-Saint-Hyacinthe
-Granby
-Courtenay
-Brandon
-Drumheller
-Wood Buffalo
-Nelson
-Victoriaville
-Campbell River
-Rimouski
-Prince Rupert
-Leamington
-Timmins
-Orillia
-Grande Prairie
-Rouyn-Noranda
-Val-d'Or
-Victoriaville
-Prince Albert
-Campbellton
-Baie-Comeau
-Camrose
-Corner Brook
-Fort St. John
-Whitehorse
-Powell River
-Yarmouth
-Swift Current
-Portage la Prairie
-Thompson
-Moose Jaw
-Terrace
-Yellowknife
-The Pas
-Red Deer
-North Battleford
-Merritt
-Gander
+toronto
+montreal
+vancouver
+calgary
+edmonton
+ottawa
+winnipeg
+quebec city
+hamilton
+kitchener
+london
+victoria
+halifax
+oshawa
+windsor
+saskatoon
+regina
+st. john's
+barrie
+kelowna
+sherbrooke
+trois-rivières
+saint john
+thunder bay
+moncton
+guelph
+kingston
+sudbury
+sault ste. marie
+penticton
+chatham-kent
+kamloops
+chilliwack
+fredericton
+prince george
+drummondville
+brooks
+saint-hyacinthe
+granby
+courtenay
+brandon
+drumheller
+wood buffalo
+nelson
+victoriaville
+campbell river
+rimouski
+prince rupert
+leamington
+timmins
+orillia
+grande prairie
+rouyn-noranda
+val-d'or
+victoriaville
+prince albert
+campbellton
+baie-comeau
+camrose
+corner brook
+fort st. john
+whitehorse
+powell river
+yarmouth
+swift current
+portage la prairie
+thompson
+moose jaw
+terrace
+yellowknife
+the pas
+red deer
+north battleford
+merritt
+gander

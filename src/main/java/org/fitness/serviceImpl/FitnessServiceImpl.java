@@ -121,7 +121,7 @@ public class FitnessServiceImpl implements FitnessService {
     }
 
     @Override
-    public String glDetails(String location) {
+    public String glDetails(String location) throws InterruptedException {
         return dealFinderAPIs.webScraperForGL(location);
     }
 

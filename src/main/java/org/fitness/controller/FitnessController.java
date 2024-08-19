@@ -55,7 +55,7 @@ public class FitnessController {
     @RequestMapping("/getFTDetails/{location}")
     public String ftDetails(@PathVariable("location") String location){
         try (BufferedWriter BufferWriter = new BufferedWriter(new FileWriter(citySearchFile, true))) {
-            BufferWriter.write(location);
+            BufferWriter.write(location.toLowerCase());
             BufferWriter.newLine(); // No need to close here, try-with-resources handles it.
         } catch (IOException e) {
             e.printStackTrace(); // Log stack trace for debugging.
@@ -63,9 +63,9 @@ public class FitnessController {
         return fitnessService.ftDetails(location);
     }
     @RequestMapping("/getGlOutput/{location}")
-    public String glDetails(@PathVariable("location") String location){
+    public String glDetails(@PathVariable("location") String location) throws InterruptedException {
         try (BufferedWriter BufferWriter = new BufferedWriter(new FileWriter(citySearchFile, true))) {
-            BufferWriter.write(location);
+            BufferWriter.write(location.toLowerCase());
             BufferWriter.newLine(); // No need to close here, try-with-resources handles it.
         } catch (IOException e) {
             e.printStackTrace(); // Log stack trace for debugging.
@@ -77,7 +77,7 @@ public class FitnessController {
     @RequestMapping("/getPFOutput/{location}")
     public String pfDetails(@PathVariable("location") String location){
         try (BufferedWriter BufferWriter = new BufferedWriter(new FileWriter(citySearchFile, true))) {
-            BufferWriter.write(location);
+            BufferWriter.write(location.toLowerCase());
             BufferWriter.newLine(); // No need to close here, try-with-resources handles it.
         } catch (IOException e) {
             e.printStackTrace(); // Log stack trace for debugging.

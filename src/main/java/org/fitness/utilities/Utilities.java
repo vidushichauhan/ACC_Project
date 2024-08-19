@@ -84,7 +84,7 @@ public class Utilities {
         Hashtable<String, Integer> citySrhCount;
         citySrhCount = fileToHashmap(citySearchFile);
 
-            locationIn = locationIn.substring(0, locationIn.length() - 1);
+          //  locationIn = locationIn.substring(0, locationIn.length() - 1);
             // check if it is a valid string
             WordCompletion wordCompletion = new WordCompletion("/Users/rohansethi/Downloads/ACC_Project/src/main/resources/Files/Cities.txt");
             List<String> cmpltdWordList = wordCompletion.findWordsWithPrefix(locationIn);

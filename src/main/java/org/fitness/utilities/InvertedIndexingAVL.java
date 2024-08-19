@@ -7,71 +7,48 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class InvertedIndexingAVL {
-
-    private AVLTree<String, Set<String>> invertedIndex;
-    public final String outputFolderName = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/ParsedFiles";
-    public Utilities utl = new Utilities();
-
-    public InvertedIndexingAVL() {
-        invertedIndex = new AVLTree<>();
-    }
+    private AVLTree invertedIndex = new AVLTree();
+    private final String outputFolderName = "/Users/rohansethi/Downloads/ACC_Project/src/main/resources/ParsedFiles";
 
     public Map<String, Set<String>> buildInvertedIndex() {
-        File directoryCNC = new File(outputFolderName);
-
-        if (!directoryCNC.exists() || !directoryCNC.isDirectory()) {
+        File directory = new File(outputFolderName);
+        if (!directory.exists() || !directory.isDirectory()) {
             System.err.println("Directory path not valid");
             return new HashMap<>();
         }
 
-        File[] filesCNC = directoryCNC.listFiles();
-
-        if (filesCNC == null || filesCNC.length == 0) {
-            System.err.println("Files could not be found in the directory");
+        File[] files = directory.listFiles();
+        if (files == null || files.length == 0) {
+            System.err.println("No files found in the directory");
             return new HashMap<>();
         }
 
-        for (File fileCNC : filesCNC) {
-            if (fileCNC.isFile() && fileCNC.getName().endsWith(".txt")) {
-                indexDocument(fileCNC);
+        for (File file : files) {
+            if (file.isFile() && file.getName().endsWith(".txt")) {
+                indexDocument(file);
             }
         }
 
-        // Convert AVLTree to Map before returning
         Map<String, Set<String>> invertedIndexMap = new HashMap<>();
-        invertedIndex.inOrderTraversal((key, value) -> invertedIndexMap.put(key, value));
-
+        invertedIndex.inOrderTraversal(invertedIndexMap::put);
         return invertedIndexMap;
     }
 
-    private void indexDocument(File fileCNC) {
-        try (BufferedReader redrCNC = new BufferedReader(new FileReader(fileCNC))) {
-            String lineCNC;
-            String documentId = fileCNC.getName();
-
-            while ((lineCNC = redrCNC.readLine()) != null) {
-                String[] terms = lineCNC.split("\\s+");
-
-                for (String term : terms) {
-                    Set<String> documents = invertedIndex.get(term);
-                    if (documents == null) {
-                        documents = new HashSet<>();
-                        invertedIndex.put(term, documents);
-                    }
-                    documents.add(documentId);
+    private void indexDocument(File file) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                for (String term : line.split("\\s+")) {
+                    invertedIndex.insert(term.toLowerCase(), file.getName());
                 }
             }
         } catch (IOException e) {
-            System.out.println("Something went wrong while interacting with file");
+            System.err.println("Error reading file: " + file.getPath());
         }
     }
-
-    public void printIndex() {
-        invertedIndex.inOrderTraversal((key, value) -> System.out.println(key + ": " + value));
-    }
 }
+

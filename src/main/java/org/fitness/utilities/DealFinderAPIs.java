@@ -101,7 +101,7 @@ public class DealFinderAPIs {
         }
     }
 
-    public String webScraperForGL(String location) {
+    public String webScraperForGL(String location) throws InterruptedException {
         // Define the system property to specify the path of ChromeDriver executable
         System.setProperty("webdriver.chrome.driver", "/Users/rohansethi/Downloads/Assignment_3/chromedriver");
 
@@ -112,10 +112,34 @@ public class DealFinderAPIs {
         edgeWebDriver.manage().window().maximize();
         edgeWebDriver.get(GOODLIFE_FITNESS_URL);
         WebDriverWait wait = new WebDriverWait(edgeWebDriver, Duration.ofSeconds(50));
+//
+//        String userInput = "Windsor";
+//
+//        WebElement LocationSearchInput = edgeWebDriver.findElement(By.xpath("/html/body/div[1]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div/div[1]/div/button"));
+//        js.executeScript("arguments[0].scrollIntoView(true);", LocationSearchInput);
+//        Thread.sleep(10000);
+//        LocationSearchInput.click();
+//        WebElement glclubInput = edgeWebDriver.findElement(By.id("location-search_-1467868934"));
+//        glclubInput.sendKeys(userInput);
+//
+//        Thread.sleep(1000);
+//        glclubInput.sendKeys(Keys.RETURN);
+//        Thread.sleep(1000);
+//        WebElement option1 = edgeWebDriver.findElement(By.xpath("/html/body/div[1]/div/div[2]/div/div[2]/div/div[3]/div/div/div/div/div/div[2]/div/div/div[3]/div[1]/div"));
+//
+//        //glclubInput.sendKeys(userInput);
+//        option1.click();
+//
+//        Thread.sleep(10000);
+
         try {
             WebElement performanceLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("label[for='performance-membership']")));
             WebElement ultimateLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("label[for='ultimate-membership']")));
             WebElement premiumLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("label[for='all-clubs-membership']")));
+
+//            WebElement performanceLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[1]/div/div[2]/div/div[3]/div/div/div/div/div/div/div/div[1]/table/thead/tr/th[8]/label")));
+//            WebElement ultimateLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[1]/div/div[2]/div/div[3]/div/div/div/div/div/div/div/div[1]/table/thead/tr/th[7]/label")));
+//            WebElement premiumLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[1]/div/div[2]/div/div[3]/div/div/div/div/div/div/div/div[1]/table/thead/tr/th[6]/label")));
 
             js.executeScript("arguments[0].scrollIntoView(true);", performanceLabel);
 

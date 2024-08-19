@@ -1,160 +1,144 @@
 package org.fitness.classes;
 
-import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
-public class AVLTree<K, V> {
+public class AVLTree {
+    private class Node {
+        String key;
+        Set<String> documents;
+        Node left, right;
+        int height;
 
-    private AVLNode<K, V> root;
-    private Comparator<? super K> comparator;
-
-    public AVLTree() {
-        this.root = null;
-        this.comparator = null;
+        Node(String key, String document) {
+            this.key = key;
+            this.documents = new HashSet<>();
+            this.documents.add(document);
+            this.height = 1; // New nodes are initially added as leaf nodes
+        }
     }
 
-    public AVLTree(Comparator<? super K> comparator) {
-        this.root = null;
-        this.comparator = comparator;
+    private Node root = null;
+
+    // Insert a key and a document into the AVL tree
+    public void insert(String key, String document) {
+        root = insert(root, key, document);
     }
 
-    public void put(K key, V value) {
-        root = put(root, key, value);
-    }
-
-    private AVLNode<K, V> put(AVLNode<K, V> node, K key, V value) {
+    private Node insert(Node node, String key, String document) {
         if (node == null) {
-            return new AVLNode<>(key, value);
+            return new Node(key, document);
         }
 
-        int cmp = compare(key, node.key);
-        if (cmp < 0) {
-            node.left = put(node.left, key, value);
-        } else if (cmp > 0) {
-            node.right = put(node.right, key, value);
+        int compareResult = key.compareTo(node.key);
+
+        if (compareResult < 0) {
+            node.left = insert(node.left, key, document);
+        } else if (compareResult > 0) {
+            node.right = insert(node.right, key, document);
         } else {
-            node.value = value;
+            // Key already exists, just add the document
+            node.documents.add(document);
             return node;
         }
 
+        // Update height of this ancestor node
         node.height = 1 + Math.max(height(node.left), height(node.right));
 
+        // Get the balance factor of this ancestor node to check whether
+        // this node became unbalanced
         int balance = getBalance(node);
 
+        // If this node becomes unbalanced, then there are 4 cases
+
         // Left Left Case
-        if (balance > 1 && compare(key, node.left.key) < 0) {
-            return rotateRight(node);
+        if (balance > 1 && key.compareTo(node.left.key) < 0) {
+            return rightRotate(node);
         }
 
         // Right Right Case
-        if (balance < -1 && compare(key, node.right.key) > 0) {
-            return rotateLeft(node);
+        if (balance < -1 && key.compareTo(node.right.key) > 0) {
+            return leftRotate(node);
         }
 
         // Left Right Case
-        if (balance > 1 && compare(key, node.left.key) > 0) {
-            node.left = rotateLeft(node.left);
-            return rotateRight(node);
+        if (balance > 1 && key.compareTo(node.left.key) > 0) {
+            node.left = leftRotate(node.left);
+            return rightRotate(node);
         }
 
         // Right Left Case
-        if (balance < -1 && compare(key, node.right.key) < 0) {
-            node.right = rotateRight(node.right);
-            return rotateLeft(node);
+        if (balance < -1 && key.compareTo(node.right.key) < 0) {
+            node.right = rightRotate(node.right);
+            return leftRotate(node);
         }
 
+        // Return the (unchanged) node pointer
         return node;
     }
 
-    public V get(K key) {
-        AVLNode<K, V> node = get(root, key);
-        return node == null ? null : node.value;
-    }
+    // A utility function to right rotate subtree rooted with y
+    private Node rightRotate(Node y) {
+        Node x = y.left;
+        Node T2 = x.right;
 
-    private AVLNode<K, V> get(AVLNode<K, V> node, K key) {
-        if (node == null) {
-            return null;
-        }
-
-        int cmp = compare(key, node.key);
-        if (cmp < 0) {
-            return get(node.left, key);
-        } else if (cmp > 0) {
-            return get(node.right, key);
-        } else {
-            return node;
-        }
-    }
-
-    private AVLNode<K, V> rotateRight(AVLNode<K, V> y) {
-        AVLNode<K, V> x = y.left;
-        AVLNode<K, V> T2 = x.right;
-
+        // Perform rotation
         x.right = y;
         y.left = T2;
 
+        // Update heights
         y.height = Math.max(height(y.left), height(y.right)) + 1;
         x.height = Math.max(height(x.left), height(x.right)) + 1;
 
+        // Return new root
         return x;
     }
 
-    private AVLNode<K, V> rotateLeft(AVLNode<K, V> x) {
-        AVLNode<K, V> y = x.right;
-        AVLNode<K, V> T2 = y.left;
+    // A utility function to left rotate subtree rooted with x
+    private Node leftRotate(Node x) {
+        Node y = x.right;
+        Node T2 = y.left;
 
+        // Perform rotation
         y.left = x;
         x.right = T2;
 
+        // Update heights
         x.height = Math.max(height(x.left), height(x.right)) + 1;
         y.height = Math.max(height(y.left), height(y.right)) + 1;
 
+        // Return new root
         return y;
     }
 
-    private int height(AVLNode<K, V> node) {
-        return node == null ? 0 : node.height;
+    // Get the height of the tree
+    private int height(Node N) {
+        if (N == null)
+            return 0;
+
+        return N.height;
     }
 
-    private int getBalance(AVLNode<K, V> node) {
-        return node == null ? 0 : height(node.left) - height(node.right);
+    // Get balance factor of node N
+    private int getBalance(Node N) {
+        if (N == null)
+            return 0;
+
+        return height(N.left) - height(N.right);
     }
 
-    private int compare(K key1, K key2) {
-        if (comparator != null) {
-            return comparator.compare(key1, key2);
-        } else {
-            @SuppressWarnings("unchecked")
-            Comparable<? super K> k1 = (Comparable<? super K>) key1;
-            return k1.compareTo(key2);
-        }
+    // Call this method to print the documents in sorted order of terms
+    public void inOrderTraversal(BiConsumer<String, Set<String>> action) {
+        inOrderTraversal(root, action);
     }
 
-    public void inOrderTraversal(BiConsumer<K, V> consumer) {
-        inOrderTraversal(root, consumer);
-    }
-
-    private void inOrderTraversal(AVLNode<K, V> node, BiConsumer<K, V> consumer) {
+    private void inOrderTraversal(Node node, BiConsumer<String, Set<String>> action) {
         if (node != null) {
-            inOrderTraversal(node.left, consumer);
-            consumer.accept(node.key, node.value);
-            inOrderTraversal(node.right, consumer);
-        }
-    }
-
-    private static class AVLNode<K, V> {
-        private K key;
-        private V value;
-        private AVLNode<K, V> left;
-        private AVLNode<K, V> right;
-        private int height;
-
-        public AVLNode(K key, V value) {
-            this.key = key;
-            this.value = value;
-            this.left = null;
-            this.right = null;
-            this.height = 1;
+            inOrderTraversal(node.left, action);
+            action.accept(node.key, node.documents); // Apply the action
+            inOrderTraversal(node.right, action);
         }
     }
 }
+

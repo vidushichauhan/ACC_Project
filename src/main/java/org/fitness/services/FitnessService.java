@@ -21,7 +21,7 @@ public interface FitnessService {
 
     public String  ftDetails(String location);
 
-    String glDetails(String location);
+    String glDetails(String location) throws InterruptedException;
 
     String pfDetails(String location);
 
