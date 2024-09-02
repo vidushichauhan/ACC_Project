@@ -1,6 +1,3 @@
-Here's a basic template for a README file for your "FitGym Finder App" project:
-
----
 
 # FitGym Finder App
 
