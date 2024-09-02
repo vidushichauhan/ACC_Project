@@ -69,6 +69,3 @@ For any questions or suggestions, please feel free to reach out:
 - **Author**: Vidushi Chauhan
 - **GitHub**: [vidushichauhan](https://github.com/vidushichauhan)
 
----
-
-This README file provides a comprehensive overview of your project, detailing its features, technologies used, installation steps, and more.
